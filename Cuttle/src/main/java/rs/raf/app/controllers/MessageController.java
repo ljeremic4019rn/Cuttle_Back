@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
+@Deprecated
 public class MessageController {
 
     private SimpMessagingTemplate simpMessagingTemplate;

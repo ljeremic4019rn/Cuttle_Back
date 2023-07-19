@@ -9,8 +9,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import rs.raf.app.model.GameAction;
-import rs.raf.app.model.GameResponse;
+import rs.raf.app.model.actions.GameAction;
+import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.User;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.responses.RoomKeyResponse;
@@ -39,7 +39,7 @@ public class RoomController {
     @GetMapping("/joinRoom/{roomKey}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomKey){
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (!user.isPresent()) return ResponseEntity.status(404).body("You don't have a profile created");
+        if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
         ResponseDto responseDto = roomService.joinRoom(roomKey, user.get().getUsername());
         return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
     }
@@ -47,7 +47,7 @@ public class RoomController {
     @PostMapping("/createRoom")
     public ResponseEntity<?> createRoom(){
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (!user.isPresent()) return ResponseEntity.status(404).body("You don't have a profile created");
+        if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
         String newRoomKey = roomService.createRoom(user.get().getUsername());
         return ResponseEntity.ok(new RoomKeyResponse(newRoomKey));
     }
@@ -55,16 +55,16 @@ public class RoomController {
     @PostMapping("/startRoom/{roomKey}")
     public ResponseEntity<?> startRoom(@PathVariable String roomKey){
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (!user.isPresent()) return ResponseEntity.status(404).body("You don't have a profile created");
-        ResponseDto responseDto = roomService.startGame(roomKey);
+        if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
+        ResponseDto responseDto = roomService.startGame(roomKey, user.get().getUsername());
         return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
     }
 
     @PostMapping("/stopRoom/{roomKey}")
     public ResponseEntity<?> stopRoom(@PathVariable String roomKey){
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (!user.isPresent()) return ResponseEntity.status(404).body("You don't have a profile created");
-        ResponseDto responseDto = roomService.stopGame(roomKey);
+        if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
+        ResponseDto responseDto = roomService.stopGame(roomKey, user.get().getUsername());
         return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
     }
 
@@ -75,8 +75,8 @@ public class RoomController {
         //do action
         System.out.println(stompHeaderAccessor.getUser().getName());
 
-        //todo dodaj neko objadnjivanje
-
+        String tmp = roomService.playCard(gameAction);
+        //todo vrati pravilan response webu
         this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), new GameResponse("this is a response"));
         return "ok";
     }

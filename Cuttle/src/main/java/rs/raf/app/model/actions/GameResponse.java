@@ -1,4 +1,4 @@
-package rs.raf.app.model;
+package rs.raf.app.model.actions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
