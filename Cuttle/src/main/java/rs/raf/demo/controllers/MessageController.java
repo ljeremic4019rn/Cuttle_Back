@@ -30,7 +30,7 @@ public class MessageController {
     }
 
     @MessageMapping("/send-message")
-    @SendTo("/topic/messages")
+    @SendTo("/cuttle/messages")
     public Message send(@Payload Message message, StompHeaderAccessor stompHeaderAccessor) throws Exception {
         System.out.println(stompHeaderAccessor.getUser().getName());
         message.setFrom(stompHeaderAccessor.getUser().getName());
@@ -41,7 +41,7 @@ public class MessageController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/test")
     public String test() {
-        this.simpMessagingTemplate.convertAndSend("/topic/messages", new Message("Example name", "test"));
+        this.simpMessagingTemplate.convertAndSend("/cuttle/messages", new Message("Example name", "test"));
         return "ok";
     }
 }

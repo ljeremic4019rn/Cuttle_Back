@@ -29,7 +29,7 @@ public class WebSocketEventListener {
         System.out.println("Received a new web socket connection. Session: " + headerAccessor.getSessionId());
 
         Message message = new Message("Application", "New session: " + headerAccessor.getSessionId());
-        this.messagingTemplate.convertAndSend("/topic/messages", message);
+        this.messagingTemplate.convertAndSend("/cuttle/messages", message);
     }
 
     @EventListener
@@ -38,6 +38,6 @@ public class WebSocketEventListener {
         System.out.println("Disconnected session : " + headerAccessor.getSessionId());
 
         Message message = new Message("Application", "Disconnected session: " + headerAccessor.getSessionId());
-        this.messagingTemplate.convertAndSend("/topic/messages", message);
+        this.messagingTemplate.convertAndSend("/cuttle/messages", message);
     }
 }

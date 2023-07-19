@@ -70,13 +70,15 @@ public class RoomController {
     }
 
 
-    @MessageMapping("/playAction/{roomKey}")
-    @SendTo("/cuttle/update")
-    public String doAction(@PathVariable String roomKey, @Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
+    @MessageMapping("/playAction")
+//    @SendTo("/cuttle/update")
+    public String doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
         //do action
         System.out.println(stompHeaderAccessor.getUser().getName());
 
-        this.simpMessagingTemplate.convertAndSend("/cuttle/messages/" + roomKey, new GameResponse("this is a response"));
+        //todo dodaj neko objadnjivanje
+
+        this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), new GameResponse("this is a response"));
         return "ok";
     }
 
