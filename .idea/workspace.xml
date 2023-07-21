@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="7 made so front will do locking and discarding">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="randomised starting player">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/ActionType.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +111,7 @@
       <workItem from="1689765188702" duration="11921000" />
       <workItem from="1689792277942" duration="8984000" />
       <workItem from="1689801286562" duration="326000" />
-      <workItem from="1689933754778" duration="20179000" />
+      <workItem from="1689933754778" duration="23870000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -169,7 +169,28 @@
       <option name="project" value="LOCAL" />
       <updated>1689969364235</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added 2 (permanent card remove not counter) (not tested)">
+      <created>1689970198295</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1689970198295</updated>
+    </task>
+    <task id="LOCAL-00010" summary="added countering, discarding 2s and the countered card from hands (not tested)">
+      <created>1689971345591</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1689971345591</updated>
+    </task>
+    <task id="LOCAL-00011" summary="randomised starting player">
+      <created>1689971863756</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1689971863756</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,6 +218,9 @@
     <MESSAGE value="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)" />
     <MESSAGE value="commit pre kise :)" />
     <MESSAGE value="7 made so front will do locking and discarding" />
-    <option name="LAST_COMMIT_MESSAGE" value="7 made so front will do locking and discarding" />
+    <MESSAGE value="added 2 (permanent card remove not counter) (not tested)" />
+    <MESSAGE value="added countering, discarding 2s and the countered card from hands (not tested)" />
+    <MESSAGE value="randomised starting player" />
+    <option name="LAST_COMMIT_MESSAGE" value="randomised starting player" />
   </component>
 </project>

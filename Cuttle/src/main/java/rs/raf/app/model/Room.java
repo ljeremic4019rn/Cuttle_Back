@@ -244,11 +244,11 @@ public class Room extends Thread{
         //find all jacks on top and send to graveyard
         //then send regular point card to graveyard
         if (ontoPlayedCardSplit[0].equals("J")) {
-            int jackCounter = 0;
             cardWasJacked = true;
             playedOntoCardRank = Integer.parseInt(playedCardSplit[playedCardSplit.length - 2]); //skipping jacks
             cardToScuttle = ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2] + "_" + ontoPlayedCardSplit[ontoPlayedCardSplit.length - 1];//onto card it self
 
+            int jackCounter = 0;
             String card;
             //collect all jacks to send to graveyard
             while (ontoPlayedCardSplit[jackCounter].equals("J")) { //J_S_<id>_10_S - we are splitting this
@@ -291,7 +291,7 @@ public class Room extends Thread{
             //go through all cards and remove all number cards
             for (String card : cardsOnTableList) {
                 cardSplit = card.split("_");
-                //remove all number cards except 8 as a permanent effect card
+                //remove all number cards except 8 as a permanent effect card (P_8_S)
                 if (cardSplit[0].equals("1") || cardSplit[0].equals("2") || cardSplit[0].equals("3") || cardSplit[0].equals("4") || cardSplit[0].equals("5")
                         || cardSplit[0].equals("6") || cardSplit[0].equals("7") || cardSplit[0].equals("8") || cardSplit[0].equals("9") || cardSplit[0].equals("10")) {
                     cardsOnTableList.remove(card);
@@ -308,49 +308,51 @@ public class Room extends Thread{
     }
 
     //todo code je isti kao power9 samo bez add (ako je bug kod jedne i kod druge je)
-
     private boolean play2power(GameAction gameAction) {
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
         //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
         //J_S_<id>_10_C || J_S_<id>_J_C_<id>_J_H_<id>_10_C
-        if (ontoPlayedCardSplit[0].equals("J")) {
-            String topJackCard = ontoPlayedCardSplit[0] + "_" + ontoPlayedCardSplit[1];
-            String cardToReturn = "empty_card";
-            int playerToReturnCardTo;
+        switch (ontoPlayedCardSplit[0]) {
+            case "J" -> {
+                String topJackCard = ontoPlayedCardSplit[0] + "_" + ontoPlayedCardSplit[1];
+                String cardToReturn = "empty_card";
+                int playerToReturnCardTo;
 
-            //if split[3] == J -> there is another Jack on top, return to that players table based on the next <id>
-            //else if split[3] == num -> return the point card to the og players table
-            if (ontoPlayedCardSplit[3].equals("J")) {//we have to build back the card with the Js still on it
-                for (int i = 3; i < ontoPlayedCardSplit.length; i++) {
-                    cardToReturn = ontoPlayedCardSplit[i];
-                    if (i < ontoPlayedCardSplit.length - 1)
-                        cardToReturn = cardToReturn + "_";
+                //if split[3] == J -> there is another Jack on top, return to that players table based on the next <id>
+                //else if split[3] == num -> return the point card to the og players table
+                if (ontoPlayedCardSplit[3].equals("J")) {//we have to build back the card with the Js still on it
+                    for (int i = 3; i < ontoPlayedCardSplit.length; i++) {
+                        cardToReturn = ontoPlayedCardSplit[i];
+                        if (i < ontoPlayedCardSplit.length - 1)
+                            cardToReturn = cardToReturn + "_";
+                    }
+                    playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[5]);
+                } else {
+                    cardToReturn = ontoPlayedCardSplit[3] + "_" + ontoPlayedCardSplit[4];
+                    playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[2]);
                 }
-                playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[5]);
-            } else {
-                cardToReturn = ontoPlayedCardSplit[3] + "_" + ontoPlayedCardSplit[4];
-                playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[2]);
+                playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed()); //remove jacked card
+                graveyard.add(topJackCard);//send jack to graveyard
+                playerTables.get(playerToReturnCardTo).add(cardToReturn);
             }
+            //Q_S...
+            case "Q", "P" -> {
+                playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
+                graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
+            }
+            case "K" -> {
+                playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 2ed card from table
+                graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
+                playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+            }
+            //1_S...
+            default -> {
+                return false;
+            }
+        }
 
-            playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed()); //remove jacked card
-            graveyard.add(topJackCard);//send jack to graveyard
-            playerTables.get(playerToReturnCardTo).add(cardToReturn);
-        }
-        //Q_S...
-        else if (ontoPlayedCardSplit[0].equals("Q") || ontoPlayedCardSplit[0].equals("P")) {
-            playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
-            graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
-        }
-        else if (ontoPlayedCardSplit[0].equals("K")) {
-            playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 2ed card from table
-            graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
-            playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
-        }
-        //1_S...
-        else return false;
-
-        //send 9 to graveyard
+        //send 2 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
 
@@ -424,17 +426,41 @@ public class Room extends Thread{
             for (String card : cardsOnTableList) {
                 cardSplit = card.split("_");
                 //if its an image card or 8 in power remove it
-                if (cardSplit[0].equals("Q") || cardSplit[0].equals("P")) {
-                    cardsOnTableList.remove(card);
-                    graveyard.add(card);
-                }
-                else if (cardSplit[0].equals("K")) {
-                    cardsOnTableList.remove(card);
-                    graveyard.add(card);
-                    playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
-                }
-                else if (cardSplit[0].equals("J")) {
-                    //todo vrati jacked kartu nazad svom og vlasniku
+                switch (cardSplit[0]) {
+                    case "Q" -> {
+                        cardsOnTableList.remove(card);
+                        graveyard.add(card);
+                    }
+                    case "P" -> {
+                        cardsOnTableList.remove(card);
+                        String card8withoutP = cardSplit[1] + "_" + cardSplit[2];
+                        graveyard.add(card8withoutP);
+                    }
+                    case "K" -> {
+                        cardsOnTableList.remove(card);
+                        graveyard.add(card);
+                        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+                    }
+                    //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
+                    //J_S_<id>_10_C || J_S_<id>_J_C_<id>_J_H_<id>_10_C
+                    case "J" -> {
+                        String jackCard;
+                        int jackCounter = 0;
+                        ArrayList<String> jacksToSendToGraveyard = new ArrayList<>();
+                        //collect all jacks to send to graveyard
+                        while (cardSplit[jackCounter].equals("J")) { //J_S_<id>_10_S - we are splitting this
+                            jackCard = cardSplit[jackCounter] + "_" + cardSplit[jackCounter + 1]; //ctr = J + _ + S
+                            jacksToSendToGraveyard.add(jackCard);
+                            jackCounter = jackCounter + 3;
+                        }
+                        graveyard.addAll(jacksToSendToGraveyard);
+
+                        //return the point card to og owner
+                        int ogOwnerId = Integer.parseInt(cardSplit[cardSplit.length - 3]);//we are taking the last <id> aka first owner
+                        String cardToGiveBack = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];
+                        cardsOnTableList.remove(card);//remove jacked card from table
+                        playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
+                    }
                 }
             }
         });
@@ -510,9 +536,14 @@ public class Room extends Thread{
                 playerTables.get(playerToReturnCardTo).add(cardToReturn);
             }
             //Q_S...
-            case "Q", "P" -> {
+            case "Q" -> {
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
                 playerHands.get(gameAction.getOntoPlayer()).add(gameAction.getOntoCardPlayed());//return 9ed card to hand
+            }
+            case "P" -> {
+                String card8withoutP = ontoPlayedCardSplit[1] + "_" + ontoPlayedCardSplit[2];
+                playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
+                playerHands.get(gameAction.getOntoPlayer()).add(card8withoutP);//return 9ed card to hand
             }
             case "K" -> {
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
