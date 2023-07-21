@@ -2,24 +2,25 @@ package rs.raf.app.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import rs.raf.app.model.actions.CardComparison;
-import rs.raf.app.model.actions.GameAction;
+import rs.raf.app.model.actions.*;
 
 import java.util.*;
 
 @Getter
 @Setter
-public class Room {
+public class Room extends Thread{
 
     //todo postavi room creation time kako bi se pratila koja je aktiva a koja je smece
     //todo smisli nacin da se sklone igraci ako kliknu back ili ako nisu aktivni (mozda na frontu)
 
     //room vars
+    private GameResponse gameResponse;
     private boolean gameIsRunning = false;
     private String idKey;
     private String roomOwner;
     private ArrayList<String> players = new ArrayList<>(); // prvi koji udje je owner
-    private int currentPlayersTurn;
+    private int currentPlayersTurn;//todo namesti current players turn
+    private int playerWhoWon = -1;
 
     //decks
     private ArrayList<String> setUpDeck = new ArrayList<>();
@@ -30,6 +31,7 @@ public class Room {
     private Map<Integer, ArrayList<String>> playerHands = new HashMap<>(); //player number / hand
     private Map<Integer, ArrayList<String>> playerTables = new HashMap<>(); //cards that are in play
     private Map<Integer, Integer> playerScore = new HashMap<>(); //player number / hand
+    private Map<Integer, Integer> playerKings = new HashMap<>(); //number of kinds a player has active
 
     //helper vars
     private boolean turnOver;
@@ -38,12 +40,27 @@ public class Room {
 
     public Room() {
         setUpDeck.addAll(Arrays.asList(
-                "1_C", "2_C", "3_C", "4_C", "5_C", "6_C", "7_C", "8_C", "9_C", "10_C", "J_C", "Q_C", "K_C",//weakest suit
+                "1_C", "2_C", "3_C", "4_C", "5_C", "6_C", "7_C", "8_C", "9_C", "10_C", "J_C", "Q_C", "K_C",
                 "1_D", "2_D", "3_D", "4_D", "5_D", "6_D", "7_D", "8_D", "9_D", "10_D", "J_D", "Q_D", "K_D",
                 "1_H", "2_H", "3_H", "4_H", "5_H", "6_H", "7_H", "8_H", "9_H", "10_H", "J_H", "Q_H", "K_H",
-                "1_S", "2_S", "3_S", "4_S", "5_S", "6_S", "7_S", "8_S", "9_S", "10_S", "J_S", "Q_S", "K_S" //strongest suit
+                "1_S", "2_S", "3_S", "4_S", "5_S", "6_S", "7_S", "8_S", "9_S", "10_S", "J_S", "Q_S", "K_S"
         ));
         Collections.shuffle(setUpDeck);
+    }
+
+    public void startGame() {
+        currentPlayersTurn = 1; //todo mozda 0 ili username
+        for (int i = 0; i < players.size(); i++) {
+            playerScore.put(i, 0);
+            playerKings.put(i, 0);
+        }
+        dealCards();
+        gameIsRunning = true;
+    }
+
+    public void stopGame() {
+        gameIsRunning = false;
+        //todo dodaj da se nesto vrati, ili da se sacuva score na igracu ili nesto
     }
 
     private void dealCards() {
@@ -60,10 +77,6 @@ public class Room {
         });
     }
 
-    public void drawCard() {
-        playerHands.get(currentPlayersTurn).add(deck.pop());
-    }
-
     /*
     card send format = <number/rank> - <suit> (1-S / K-C)
      */
@@ -72,12 +85,14 @@ public class Room {
 
     //todo dodaj na kraju check da li current player ima 21
 
-    public void playTurn(GameAction gameAction) {
+    public GameResponse playTurn(GameAction gameAction) {
+
+        //todo wait 5
 
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);
-            case POWER -> turnOver = playScuttleCard(gameAction);
-            case SCUTTLE -> {
+            case SCUTTLE -> turnOver = playScuttleCard(gameAction);
+            case POWER -> {
                 switch (gameAction.getCardPlayed().split("_")[0]) {
                     case "1" -> turnOver = play1power(gameAction);
                     case "2" -> turnOver = play2power(gameAction);
@@ -95,7 +110,69 @@ public class Room {
             }
         }
 
+        //todo mozda skloni ovaj boolean jer je malo usless
+        if (!turnOver) System.err.println("KURAC SE DESIO, NADJI PROBLEM");
+
         //todo NA KRAJU PROVERI DAL POSTOJI KRALJ NA TABLI I PROVERI DAL JE NEKO PRESAO 21
+        gameResponse = new GameResponse(
+                GameResponseType.REGULAR,
+                currentPlayersTurn,
+                graveyard,
+                playerHands,
+                playerTables,
+                playerScore,
+                -1
+        );
+
+        playerWhoWon = checkIfSomebodyWon();
+        if (playerWhoWon != -1){
+            gameResponse.setGameResponseType(GameResponseType.GAME_OVER_WON);
+            gameResponse.setPlayerWhoWon(playerWhoWon);
+        }
+
+        return gameResponse;
+    }
+
+    public GameResponse drawCard() {
+        playerHands.get(currentPlayersTurn).add(deck.pop());
+
+        gameResponse = new GameResponse(
+                GameResponseType.REGULAR,
+                currentPlayersTurn,
+                graveyard,
+                playerHands,
+                playerTables,
+                playerScore,
+                -1
+        );
+        return gameResponse;
+    }
+
+    private int checkIfSomebodyWon(){
+        for (Map.Entry<Integer, Integer> entry : playerScore.entrySet()) {
+            int playerId = entry.getKey();
+            int numberOfKings = playerKings.get(playerId);
+            int score = entry.getValue();
+
+            switch (numberOfKings){
+                case 0 -> {
+                    if (score >= 21) return playerId;
+                }
+                case 1 -> {
+                    if (score >= 14) return playerId;
+                }
+                case 2 -> {
+                    if (score >= 10) return playerId;
+                }
+                case 3 -> {
+                    if (score >= 7) return playerId;
+                }
+                case 4 -> {
+                    if (score >= 5) return playerId;
+                }
+            }
+        }
+        return -1;
     }
 
     private boolean playNumberCard(GameAction gameAction) {
@@ -191,6 +268,23 @@ public class Room {
     }
 
     //todo finish 2
+
+    /*
+    todo: ideja za 2
+
+    * razdvoji funkije 2 na dve,
+     1.regular 2 koji ce da ubija permamentne karte sa terena
+     2. funkija koja ce da radi uskakanje, tj postavljace 2 u string var, ispod opisan
+
+    postavi se String var koji prima dvojku poslatu sa fronta
+    1.
+    ako na kraju while (sleep) ima nesto u stringu onda
+    posalji i tu dvojku i bacenu kartu na groblje
+    2.
+    ako vec ima nesto u stringu kada se pokusa staviti u string, samo isprazni string (2 ubija 2)
+
+     */
+
     private boolean play2power(GameAction gameAction) {
         //proveri da li ima kraljica na terenu
         //posalji kartu na groblje ako je igrano na permanent effect kartu na terenu
@@ -267,9 +361,17 @@ public class Room {
             for (String card : cardsOnTableList) {
                 cardSplit = card.split("_");
                 //if its an image card or 8 in power remove it
-                if (cardSplit[0].equals("J") || cardSplit[0].equals("Q") || cardSplit[0].equals("K") || cardSplit[0].equals("P")) {
+                if (cardSplit[0].equals("Q") || cardSplit[0].equals("P")) {
                     cardsOnTableList.remove(card);
                     graveyard.add(card);
+                }
+                else if (cardSplit[0].equals("K")) {
+                    cardsOnTableList.remove(card);
+                    graveyard.add(card);
+                    playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+                }
+                else if (cardSplit[0].equals("J")) {
+                    //todo vrati jacked kartu nazad svom og vlasniku
                 }
             }
         });
@@ -282,7 +384,15 @@ public class Room {
     }
 
     //todo finish 7
+    //todo postavi discard funkciju koja ce da stavi kartu na groblje
+    //todo stavi skip turn dugme da ne morada se ceka 60 sec ako ne moze da se odigra karta
     private boolean play7power(GameAction gameAction) {
+        //povuci kartu i stavi je u ruku igraca
+        //na frontu forsiraj/zakljucaj (oboji u crveno kartu) da moze samo nju da igra
+        // ako je odigra regularno se zovu sve funkcije
+        //ako ne moze da je igra samo ce se pozvati discard fukcija koja ce da je odbaci
+
+
 
         //send 7 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
@@ -332,9 +442,14 @@ public class Room {
             playerTables.get(playerToReturnCardTo).add(cardToReturn);
         }
         //Q_S...
-        else if (ontoPlayedCardSplit[0].equals("Q") || ontoPlayedCardSplit[0].equals("K") || ontoPlayedCardSplit[0].equals("P")) {
+        else if (ontoPlayedCardSplit[0].equals("Q") || ontoPlayedCardSplit[0].equals("P")) {
             playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
             playerHands.get(gameAction.getOntoPlayer()).add(gameAction.getOntoCardPlayed());//return 9ed card to hand
+        }
+        else if (ontoPlayedCardSplit[0].equals("K")) {
+            playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
+            playerHands.get(gameAction.getOntoPlayer()).add(gameAction.getOntoCardPlayed());//return 9ed card to hand
+            playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
         }
         //1_S...
         else return false;
@@ -375,21 +490,10 @@ public class Room {
     private boolean playKingPower(GameAction gameAction) {
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
+        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn + 1));//add one king to king tracker map
         return true;
     }
 
-    public void startGame() {
-        currentPlayersTurn = 1; //todo mozda 0 ili username
-        for (int i = 0; i < players.size(); i++) {
-            playerScore.put(i, 0);
-        }
-        dealCards();
-        gameIsRunning = true;
-    }
-
-    public void stopGame() {
-        gameIsRunning = false;
-    }
 
     //C - weakest
     //D
@@ -441,5 +545,6 @@ public class Room {
     private void printGraveyard() {
         graveyard.forEach(System.out::println);
     }
+
 
 }

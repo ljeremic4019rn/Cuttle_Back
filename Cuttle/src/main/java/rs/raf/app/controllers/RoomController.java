@@ -70,17 +70,11 @@ public class RoomController {
 
 
     @MessageMapping("/playAction")
-//    @SendTo("/cuttle/update")
-    public String doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
-        //do action
+    public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
+        //todo skloni print
         System.out.println(stompHeaderAccessor.getUser().getName());
-
-        String tmp = roomService.playCard(gameAction);
-        //todo vrati pravilan response webu
-        this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), new GameResponse("this is a response"));
-        return "ok";
+        this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.playCard(gameAction));
+        return ResponseEntity.ok("Socket updated");
     }
-
-    //todo draw card route
 
 }

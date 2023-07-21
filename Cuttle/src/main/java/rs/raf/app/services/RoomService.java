@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.Room;
 import rs.raf.app.model.actions.GameAction;
+import rs.raf.app.model.actions.GameResponse;
+import rs.raf.app.model.actions.GameResponseType;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.utils.RoomKeyGenerator;
 
@@ -80,10 +82,11 @@ public class RoomService {
     }
 
     //todo mozda da se stavi check da samo current player moze da igra, ali mozda je lakse na frontu to
-    public String playCard(GameAction gameAction) {
+    public GameResponse playCard(GameAction gameAction) {
+        GameResponse gameResponse = null;
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
             Room room = activeRooms.get(gameAction.getRoomKey());
-            room.playTurn(gameAction);
+            gameResponse = room.playTurn(gameAction);
 
             //todo dodaj pravilan return
 
@@ -91,21 +94,18 @@ public class RoomService {
             System.err.println("NESTO JE MNOGO LOSE");
         }
 
-        return null;
+        return gameResponse;
     }
 
 
-    public String drawCard(String roomKey) {
+    public GameResponse drawCard(String roomKey) {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
-            room.drawCard();
-
-            //todo dodaj pravilan return
-
+            return room.drawCard();
         } else {
             System.err.println("NESTO JE MNOGO LOSE");
+            return null;
         }
-        return null;
     }
 
 }

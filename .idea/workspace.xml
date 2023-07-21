@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="added a lot of card functions (nothing is tested yet)">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)">
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponseType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +115,7 @@
       <workItem from="1689765188702" duration="11921000" />
       <workItem from="1689792277942" duration="8984000" />
       <workItem from="1689801286562" duration="326000" />
-      <workItem from="1689933754778" duration="8072000" />
+      <workItem from="1689933754778" duration="16435000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -142,7 +145,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689801257758</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)">
+      <created>1689948817686</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1689948817686</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,6 +177,7 @@
     <MESSAGE value="folder name change" />
     <MESSAGE value="pocet rad na game engine, koji obradjuje karte" />
     <MESSAGE value="added a lot of card functions (nothing is tested yet)" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a lot of card functions (nothing is tested yet)" />
+    <MESSAGE value="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)" />
   </component>
 </project>
