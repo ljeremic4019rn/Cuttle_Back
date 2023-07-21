@@ -3,6 +3,7 @@ package rs.raf.app.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.Room;
+import rs.raf.app.model.actions.ActionType;
 import rs.raf.app.model.actions.GameAction;
 import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.actions.GameResponseType;
@@ -79,6 +80,8 @@ public class RoomService {
             //todo delete room
             return new ResponseDto("Game stopped", 200);
         } else return new ResponseDto("Requested room doesn't exist", 404);
+
+        //todo ubi sockete koji su aktivni mozda?
     }
 
     //todo mozda da se stavi check da samo current player moze da igra, ali mozda je lakse na frontu to

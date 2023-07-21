@@ -3,8 +3,10 @@ package rs.raf.app.model.actions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class GameAction {
     private String roomKey;

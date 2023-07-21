@@ -18,8 +18,9 @@ public class Room extends Thread{
     private boolean gameIsRunning = false;
     private String idKey;
     private String roomOwner;
+    private int numOfPlayers;
     private ArrayList<String> players = new ArrayList<>(); // prvi koji udje je owner
-    private int currentPlayersTurn;//todo namesti current players turn
+    private int currentPlayersTurn = 0;
     private int playerWhoWon = -1;
 
     //decks
@@ -36,7 +37,22 @@ public class Room extends Thread{
     //helper vars
     private boolean turnOver;
     Random random = new Random();
+//    int playerWithActive7Card;
+//    String cardDrawnWith7Card;
 
+
+    //todo stavi da bude random ko pocinje prvi
+    //todo stavi da onaj koji prvi igra dobije jednu vise kartu
+    public void startGame() {
+        currentPlayersTurn = 1;
+        for (int i = 0; i < players.size(); i++) {
+            playerScore.put(i, 0);
+            playerKings.put(i, 0);
+        }
+        dealCards();
+        numOfPlayers = players.size();
+        gameIsRunning = true;
+    }
 
     public Room() {
         setUpDeck.addAll(Arrays.asList(
@@ -48,20 +64,11 @@ public class Room extends Thread{
         Collections.shuffle(setUpDeck);
     }
 
-    public void startGame() {
-        currentPlayersTurn = 1; //todo mozda 0 ili username
-        for (int i = 0; i < players.size(); i++) {
-            playerScore.put(i, 0);
-            playerKings.put(i, 0);
-        }
-        dealCards();
-        gameIsRunning = true;
-    }
-
     public void stopGame() {
         gameIsRunning = false;
         //todo dodaj da se nesto vrati, ili da se sacuva score na igracu ili nesto
     }
+
 
     private void dealCards() {
         //1. we fill the stack with shuffled cards (stack because its easier to remove just the top card and not having to fuck with the list size)
@@ -87,11 +94,12 @@ public class Room extends Thread{
 
     public GameResponse playTurn(GameAction gameAction) {
 
-        //todo wait 5
+        //todo wait za uskok 2 ce se uraditi na frontu
 
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);
             case SCUTTLE -> turnOver = playScuttleCard(gameAction);
+            case DISCARD_CARD -> discardCardFromCurrentPlayersHand(gameAction.getCardPlayed()); //we place a card we want to discard into played for convenience
             case POWER -> {
                 switch (gameAction.getCardPlayed().split("_")[0]) {
                     case "1" -> turnOver = play1power(gameAction);
@@ -113,9 +121,8 @@ public class Room extends Thread{
         //todo mozda skloni ovaj boolean jer je malo usless
         if (!turnOver) System.err.println("KURAC SE DESIO, NADJI PROBLEM");
 
-        //todo NA KRAJU PROVERI DAL POSTOJI KRALJ NA TABLI I PROVERI DAL JE NEKO PRESAO 21
         gameResponse = new GameResponse(
-                GameResponseType.REGULAR,
+                GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
                 graveyard,
                 playerHands,
@@ -129,6 +136,7 @@ public class Room extends Thread{
             gameResponse.setGameResponseType(GameResponseType.GAME_OVER_WON);
             gameResponse.setPlayerWhoWon(playerWhoWon);
         }
+        swapTurnToNextPlayer();
 
         return gameResponse;
     }
@@ -137,7 +145,7 @@ public class Room extends Thread{
         playerHands.get(currentPlayersTurn).add(deck.pop());
 
         gameResponse = new GameResponse(
-                GameResponseType.REGULAR,
+                GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
                 graveyard,
                 playerHands,
@@ -145,6 +153,7 @@ public class Room extends Thread{
                 playerScore,
                 -1
         );
+        swapTurnToNextPlayer();
         return gameResponse;
     }
 
@@ -319,20 +328,24 @@ public class Room extends Thread{
         if (playerHandSize == 0) return true;
             //if one remove that single one and add to graveyard
         else if (playerHandSize == 1) {
-            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(0));
-            playerHands.get(gameAction.getOntoPlayer()).remove(0);
+            //todo ako ne radi discard function samo vrati manuelno (ovo ispod)
+            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(0));
+//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(0));
+//            playerHands.get(gameAction.getOntoPlayer()).remove(0);
         }
         //remove 2 at random and add to graveyard
         else {
             playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
             randomCardIndex = random.nextInt(playerHandSize);
-            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
+            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
+//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
+//            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
 
             playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
             randomCardIndex = random.nextInt(playerHandSize);
-            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
+            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
+//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
+//            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
         }
 
         //send 4 to graveyard
@@ -383,20 +396,21 @@ public class Room extends Thread{
         return true;
     }
 
-    //todo finish 7
     //todo postavi discard funkciju koja ce da stavi kartu na groblje
     //todo stavi skip turn dugme da ne morada se ceka 60 sec ako ne moze da se odigra karta
     private boolean play7power(GameAction gameAction) {
-        //povuci kartu i stavi je u ruku igraca
-        //na frontu forsiraj/zakljucaj (oboji u crveno kartu) da moze samo nju da igra
-        // ako je odigra regularno se zovu sve funkcije
-        //ako ne moze da je igra samo ce se pozvati discard fukcija koja ce da je odbaci
-
-
-
         //send 7 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
+
+        //todo provera dal je ova karta bacena ce biti na FRONTU, ako se baci isprazni, ako se ne baci discarduj
+        //draw card to play next
+        playerHands.get(currentPlayersTurn).add(deck.pop());
+        currentPlayersTurn-= 1;//todo proveri ovo
+
+//        cardDrawnWith7Card = deck.pop(); ovo je vrv samo govno
+//        playerWithActive7Card = currentPlayersTurn;
+//        playerHands.get(currentPlayersTurn).add(cardDrawnWith7Card);
 
         return true;
     }
@@ -524,6 +538,17 @@ public class Room extends Thread{
             }
         }
         return CardComparison.NOT_BIGGER;
+    }
+
+
+    private void discardCardFromCurrentPlayersHand(String cardToDiscard){
+        playerHands.get(currentPlayersTurn).remove(cardToDiscard);
+        graveyard.add(cardToDiscard);
+    }
+
+    private void swapTurnToNextPlayer(){
+        currentPlayersTurn += 1;
+        if (currentPlayersTurn == numOfPlayers) currentPlayersTurn = 0;
     }
 
     private void printAllHands() {
