@@ -11,7 +11,6 @@ public class GameAction {
     private ActionType actionType;
     private int fromPlayer;
     private String cardPlayed;
-
     //this is userd only for power or scuttle plays
     private int ontoPlayer;
     private String ontoCardPlayed;
