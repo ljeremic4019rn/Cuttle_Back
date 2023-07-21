@@ -44,16 +44,21 @@ public class Room extends Thread{
     //todo stavi da bude random ko pocinje prvi
     //todo stavi da onaj koji prvi igra dobije jednu vise kartu
     public void startGame() {
-        currentPlayersTurn = 1;
         for (int i = 0; i < players.size(); i++) {
             playerScore.put(i, 0);
             playerKings.put(i, 0);
         }
         dealCards();
+        randomizeStartingPlayer();
         numOfPlayers = players.size();
         gameIsRunning = true;
     }
-
+    /*
+    card format = <rank>_<suit> (10_S / K_C)
+    exception to
+    - 8 power = P_<rank>_<suit> (P_10_S)
+    - Jacked cards = J_<rank>_<last owner>_[repeat if more jacks]_<rank>_<suit> (J_S_3_10_S / J_S_3_J_H_2_10_S)
+    */
     public Room() {
         setUpDeck.addAll(Arrays.asList(
                 "1_C", "2_C", "3_C", "4_C", "5_C", "6_C", "7_C", "8_C", "9_C", "10_C", "J_C", "Q_C", "K_C",
@@ -69,9 +74,8 @@ public class Room extends Thread{
         //todo dodaj da se nesto vrati, ili da se sacuva score na igracu ili nesto
     }
 
-
     private void dealCards() {
-        //1. we fill the stack with shuffled cards (stack because its easier to remove just the top card and not having to fuck with the list size)
+        //1. we fill the stack with shuffled cards (stack because it's easier to remove just the top card and not having to fuck with the list size)
         for (String card : setUpDeck) {
             deck.push(card);
         }
@@ -84,13 +88,13 @@ public class Room extends Thread{
         });
     }
 
-    /*
-    card send format = <number/rank> - <suit> (1-S / K-C)
-     */
+    //first player has 1 extra card
+    private void randomizeStartingPlayer(){
+        int firstPlayer = random.nextInt(players.size()) - 1;
+        currentPlayersTurn = firstPlayer;
+        playerHands.get(firstPlayer).add(deck.pop());
+    }
 
-    //todo uradi return da znamo kada se potez zavrsio
-
-    //todo dodaj na kraju check da li current player ima 21
 
     public GameResponse playTurn(GameAction gameAction) {
 
