@@ -99,7 +99,8 @@ public class Room extends Thread{
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);
             case SCUTTLE -> turnOver = playScuttleCard(gameAction);
-            case DISCARD_CARD -> discardCardFromCurrentPlayersHand(gameAction.getCardPlayed()); //we place a card we want to discard into played for convenience
+            case DISCARD_CARD -> turnOver = discardCardFromCurrentPlayersHand(gameAction.getCardPlayed()); //(for cards drawn by 7) we place a card we want to discard into played for convenience
+            case COUNTER -> turnOver = counterCardPlayed(gameAction);
             case POWER -> {
                 switch (gameAction.getCardPlayed().split("_")[0]) {
                     case "1" -> turnOver = play1power(gameAction);
@@ -155,6 +156,32 @@ public class Room extends Thread{
         );
         swapTurnToNextPlayer();
         return gameResponse;
+    }
+
+    /*
+    used2s - all 2 cards that have been played and who played them <rank>_<suit>_<playerId> 2_S_3
+    card played onto - card that has been countered
+    onto player - who has been countered
+
+    - also if a 2 is countered by another 2 it will be handled front side aka if 2Played var is filled it will just empty it (action passes), therefor countering a 2 with 2
+     */
+    private boolean counterCardPlayed(GameAction gameAction){
+        String []split2Card;
+        String whole2Card;
+        //send the countered card to graveyard
+        playerHands.get(currentPlayersTurn).remove(gameAction.getOntoCardPlayed());
+        graveyard.add(gameAction.getOntoCardPlayed());
+
+        //send all 2s used to graveyard
+        for (String twoCard: gameAction.getUsed2s()) {
+            split2Card = twoCard.split("_");
+            whole2Card = split2Card[0] + "_" + split2Card[1];
+
+            playerHands.get(Integer.parseInt(split2Card[2])).remove(whole2Card);//remove 2 from players hand
+            graveyard.add(whole2Card);
+        }
+
+        return true;
     }
 
     private int checkIfSomebodyWon(){
@@ -567,9 +594,10 @@ public class Room extends Thread{
     }
 
 
-    private void discardCardFromCurrentPlayersHand(String cardToDiscard){
+    private boolean discardCardFromCurrentPlayersHand(String cardToDiscard){
         playerHands.get(currentPlayersTurn).remove(cardToDiscard);
         graveyard.add(cardToDiscard);
+        return true;
     }
 
     private void swapTurnToNextPlayer(){
