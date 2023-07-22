@@ -17,7 +17,6 @@ public class GameAction {
     //this is userd only for power or scuttle plays
     private int ontoPlayer;
     private String ontoCardPlayed;
-
     //this is used ONLY when a card is countered by a 2 (ActionType.COUNTER)
     //a list must be used because it more than one 2 is thrown (2 countered by 2 countered by 2) we need to send all of them to the graveyard
     //HOW ITS WRITTEN - <rank>_<suit>_<playerId> 2_S_3
@@ -26,4 +25,16 @@ public class GameAction {
     public GameAction() {
     }
 
+    @Override
+    public String toString() {
+        return "GameAction{" +
+                "roomKey='" + roomKey + '\'' +
+                ", actionType=" + actionType +
+                ", fromPlayer=" + fromPlayer +
+                ", cardPlayed='" + cardPlayed + '\'' +
+                ", ontoPlayer=" + ontoPlayer +
+                ", ontoCardPlayed='" + ontoCardPlayed + '\'' +
+                ", used2s=" + used2s +
+                '}';
+    }
 }

@@ -37,6 +37,10 @@ public class Room extends Thread{
     //helper vars
     private boolean turnOver;
     Random random = new Random();
+    ArrayList <String> cardsToRemove = new ArrayList<>();
+    ArrayList <String> cardsForGraveyard = new ArrayList<>();
+
+
 //    int playerWithActive7Card;
 //    String cardDrawnWith7Card;
 
@@ -47,12 +51,18 @@ public class Room extends Thread{
         for (int i = 0; i < players.size(); i++) {
             playerScore.put(i, 0);
             playerKings.put(i, 0);
+            playerTables.put(i, new ArrayList<>());
+            playerHands.put(i, new ArrayList<>());
         }
         dealCards();
-        randomizeStartingPlayer();
+//        randomizeStartingPlayer();
         numOfPlayers = players.size();
         gameIsRunning = true;
+
+        System.err.println(players.toString());
+
     }
+
     /*
     card format = <rank>_<suit> (10_S / K_C)
     exception to
@@ -86,14 +96,15 @@ public class Room extends Thread{
                 cardsInHandList.add(deck.pop());
             }
         });
+        playerHands.get(currentPlayersTurn).add(deck.pop());//todo trenutno owner ima 1 vise jer pocinje
     }
 
     //first player has 1 extra card
-    private void randomizeStartingPlayer(){
-        int firstPlayer = random.nextInt(players.size()) - 1;
-        currentPlayersTurn = firstPlayer;
-        playerHands.get(firstPlayer).add(deck.pop());
-    }
+//    private void randomizeStartingPlayer(){
+//        int firstPlayer = random.nextInt(players.size()) - 1;
+//        currentPlayersTurn = firstPlayer;
+//        playerHands.get(firstPlayer).add(deck.pop());
+//    }
 
 
     public GameResponse playTurn(GameAction gameAction) {
@@ -138,11 +149,11 @@ public class Room extends Thread{
 
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
+            System.err.println("POBEDIO JE IGRAC " + currentPlayersTurn);//todo skloni
             gameResponse.setGameResponseType(GameResponseType.GAME_OVER_WON);
             gameResponse.setPlayerWhoWon(playerWhoWon);
         }
         swapTurnToNextPlayer();
-
         return gameResponse;
     }
 
@@ -189,9 +200,18 @@ public class Room extends Thread{
     }
 
     private int checkIfSomebodyWon(){
+
+//        System.err.println("pre checka");
+//        System.err.println(playerScore.toString());
+
+
         for (Map.Entry<Integer, Integer> entry : playerScore.entrySet()) {
             int playerId = entry.getKey();
             int numberOfKings = playerKings.get(playerId);
+
+//            System.err.println("sta???");
+//            System.err.println(entry.toString());
+
             int score = entry.getValue();
 
             switch (numberOfKings){
@@ -220,7 +240,7 @@ public class Room extends Thread{
         int playedCardPower = Integer.parseInt(gameAction.getCardPlayed().split("_")[0]);
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
-        playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn + playedCardPower));
+        playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn)  + playedCardPower);
         return true;
     }
 
@@ -234,8 +254,8 @@ public class Room extends Thread{
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
         int playedCardRank = Integer.parseInt(playedCardSplit[0]);
-        int playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[0]);
-        String cardToScuttle = gameAction.getOntoCardPlayed();
+        int playedOntoCardRank;
+        String cardToScuttle ;
 
         ArrayList<String> jacksToSendToGraveyard = new ArrayList<>();
         boolean cardWasJacked = false;
@@ -257,6 +277,10 @@ public class Room extends Thread{
                 jackCounter = jackCounter + 3;
             }
         }
+        else {
+            playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[0]);
+            cardToScuttle = gameAction.getOntoCardPlayed();
+        }
 
         //if card played is bigger scuttle
         if (playedCardRank > playedOntoCardRank) {
@@ -264,6 +288,7 @@ public class Room extends Thread{
             playerTables.get(gameAction.getOntoPlayer()).remove(cardToScuttle);//remove scuttled card
             graveyard.add(gameAction.getCardPlayed());//add card we are scuttling with to graveyard
             graveyard.add(cardToScuttle);//add scuttled to graveyard
+            playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
             if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);//if was jacked send jacks to graveyard
             return true;
         }
@@ -274,6 +299,7 @@ public class Room extends Thread{
                 playerTables.get(gameAction.getOntoPlayer()).remove(cardToScuttle);
                 graveyard.add(gameAction.getCardPlayed());
                 graveyard.add(cardToScuttle);
+                playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
                 if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);
                 return true;
             }
@@ -285,21 +311,31 @@ public class Room extends Thread{
     //todo PROVER APSOLUTNO SVAKU POWER FUNKCIJU DA LI DOBRO RADI
 
     private boolean play1power(GameAction gameAction) {
+        //todo testing cardsToRemove ne mozes da iteriras kroz listu i da brises
+        //todo trenutno nema za ako je karta jacked, obstace na terenu
+
         //go through all player tables
         playerTables.forEach((playerId, cardsOnTableList) -> {
+            cardsToRemove.clear();
+            cardsForGraveyard.clear();
             String[] cardSplit;
+
             //go through all cards and remove all number cards
             for (String card : cardsOnTableList) {
                 cardSplit = card.split("_");
                 //remove all number cards except 8 as a permanent effect card (P_8_S)
                 if (cardSplit[0].equals("1") || cardSplit[0].equals("2") || cardSplit[0].equals("3") || cardSplit[0].equals("4") || cardSplit[0].equals("5")
                         || cardSplit[0].equals("6") || cardSplit[0].equals("7") || cardSplit[0].equals("8") || cardSplit[0].equals("9") || cardSplit[0].equals("10")) {
-                    cardsOnTableList.remove(card);
-                    graveyard.add(card);
+                    cardsToRemove.add(card);
+                    cardsForGraveyard.add(card);//todo ovde ce biti drugacija karta kada se uradi ja jacked karte
+//                    graveyard.add(card);
                 }
             }
+            cardsOnTableList.removeAll(cardsToRemove); //removing all points from table
+            graveyard.addAll(cardsForGraveyard);//adding all points to graveyard
         });
 
+        playerScore.replaceAll((k, v) -> 0);//setting all scores to 0
         //send 1 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
@@ -344,7 +380,7 @@ public class Room extends Thread{
             case "K" -> {
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 2ed card from table
                 graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
-                playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+                playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) - 1);//remove one king to king tracker map
             }
             //1_S...
             default -> {
@@ -419,27 +455,37 @@ public class Room extends Thread{
     }
 
     private boolean play6power(GameAction gameAction) {
+
         //go through all player tables
         playerTables.forEach((playerId, cardsOnTableList) -> {
+            cardsToRemove.clear();
+            cardsForGraveyard.clear();
             String[] cardSplit;
+
             //go through all cards and remove all permanent effect (image) cards
             for (String card : cardsOnTableList) {
                 cardSplit = card.split("_");
                 //if its an image card or 8 in power remove it
                 switch (cardSplit[0]) {
                     case "Q" -> {
-                        cardsOnTableList.remove(card);
-                        graveyard.add(card);
+//                        cardsOnTableList.remove(card);
+//                        graveyard.add(card);
+                        cardsToRemove.add(card);
+                        cardsForGraveyard.add(card);
                     }
                     case "P" -> {
-                        cardsOnTableList.remove(card);
+//                        cardsOnTableList.remove(card);
+//                        graveyard.add(card8withoutP);
                         String card8withoutP = cardSplit[1] + "_" + cardSplit[2];
-                        graveyard.add(card8withoutP);
+                        cardsToRemove.add(card);
+                        cardsForGraveyard.add(card8withoutP);
                     }
                     case "K" -> {
-                        cardsOnTableList.remove(card);
-                        graveyard.add(card);
-                        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+//                        cardsOnTableList.remove(card);
+//                        graveyard.add(card);
+                        cardsToRemove.add(card);
+                        cardsForGraveyard.add(card);
+                        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) - 1);//remove one king to king tracker map
                     }
                     //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
                     //J_S_<id>_10_C || J_S_<id>_J_C_<id>_J_H_<id>_10_C
@@ -453,16 +499,19 @@ public class Room extends Thread{
                             jacksToSendToGraveyard.add(jackCard);
                             jackCounter = jackCounter + 3;
                         }
-                        graveyard.addAll(jacksToSendToGraveyard);
+                        cardsForGraveyard.addAll(jacksToSendToGraveyard);
 
                         //return the point card to og owner
                         int ogOwnerId = Integer.parseInt(cardSplit[cardSplit.length - 3]);//we are taking the last <id> aka first owner
                         String cardToGiveBack = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];
-                        cardsOnTableList.remove(card);//remove jacked card from table
+//                        cardsOnTableList.remove(card);//remove jacked card from table
+                        cardsToRemove.add(card);//remove jacked card from table
                         playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
                     }
                 }
             }
+            graveyard.addAll(cardsForGraveyard);//todo testiraj
+            cardsOnTableList.removeAll(cardsToRemove);
         });
 
         //send 6 to graveyard
@@ -548,7 +597,7 @@ public class Room extends Thread{
             case "K" -> {
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
                 playerHands.get(gameAction.getOntoPlayer()).add(gameAction.getOntoCardPlayed());//return 9ed card to hand
-                playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn - 1));//remove one king to king tracker map
+                playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) - 1);//remove one king to king tracker map
             }
             //1_S...
             default -> {
@@ -592,7 +641,7 @@ public class Room extends Thread{
     private boolean playKingPower(GameAction gameAction) {
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
-        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn + 1));//add one king to king tracker map
+        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) + 1);//add one king to king tracker map
         return true;
     }
 
@@ -640,6 +689,23 @@ public class Room extends Thread{
         if (currentPlayersTurn == numOfPlayers) currentPlayersTurn = 0;
     }
 
+    public void printAll(){
+        System.out.println("Current players turn = " + currentPlayersTurn);
+
+        System.out.println("Deck:");
+        printDeck();
+        System.out.println("Graveyard:");
+        printGraveyard();
+        System.out.println("Score");
+        printPlayScore();
+        System.out.println("Kings:");
+        printKings();
+        System.out.println("Table:");
+        printAllTables();
+        System.out.println("Hands:");
+        printAllHands();
+    }
+
     private void printAllHands() {
         playerHands.forEach((key, value) -> {
             System.out.println("player " + key + " = {" + value + "}");
@@ -653,11 +719,29 @@ public class Room extends Thread{
     }
 
     private void printDeck() {
-        deck.forEach(System.out::println);
+        deck.forEach(value -> {
+            System.out.print(value + ", ");
+        });
+        System.out.print("\n");
     }
 
     private void printGraveyard() {
-        graveyard.forEach(System.out::println);
+        graveyard.forEach(value -> {
+            System.out.print(value + ", ");
+        });
+        System.out.print("\n");    }
+
+    private void printPlayScore(){
+//        playerScore.forEach((key, value) -> {
+//            System.out.println("player " + key + " = {" + value + "}");
+//        });
+        System.out.println(playerScore.toString());
+    }
+
+    private void printKings(){
+        playerKings.forEach((key, value) -> {
+            System.out.println("player " + key + " = {" + value + "}");
+        });
     }
 
 

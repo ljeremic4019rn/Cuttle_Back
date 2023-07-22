@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import rs.raf.app.model.actions.ActionType;
 import rs.raf.app.model.actions.GameAction;
 import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.User;
@@ -73,8 +74,31 @@ public class RoomController {
     public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
         //todo skloni print
         System.out.println(stompHeaderAccessor.getUser().getName());
-        this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.playCard(gameAction));
+
+        if (gameAction.getActionType() == ActionType.DRAW) {
+            this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.drawCard(gameAction.getRoomKey()));
+        }
+        else {
+            this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.playCard(gameAction));
+        }
         return ResponseEntity.ok("Socket updated");
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<?> test(@RequestBody GameAction gameAction){
+        //todo skloni print
+//        System.out.println(stompHeaderAccessor.getUser().getName());
+
+        System.err.println("Playing");
+//        System.out.println(gameAction.toString());
+
+        if (gameAction.getActionType() == ActionType.DRAW) {
+            return  ResponseEntity.ok(roomService.drawCard(gameAction.getRoomKey()));
+        }
+        else {
+            return ResponseEntity.ok(roomService.playCard(gameAction));
+        }
+//        return ResponseEntity.ok("Socket updated");
     }
 
 }

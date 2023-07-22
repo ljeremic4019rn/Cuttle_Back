@@ -36,7 +36,7 @@ public class RoomService {
         room.setIdKey(roomKey);
         room.setRoomOwner(owner_username);
         room.getPlayers().add(owner_username);
-        room.getPlayerHands().put(1, new ArrayList<>());
+//        room.getPlayerHands().put(1, new ArrayList<>());
         activeRooms.put(roomKey, room);
         return roomKey;
     }
@@ -48,9 +48,9 @@ public class RoomService {
             if (room.isGameIsRunning()) return new ResponseDto("Game already in progress", 401);
             if (room.getPlayerHands().size() == NUMBER_OF_PLAYERS)
                 return new ResponseDto("Maximum room capacity reached", 401);
-            if (room.getPlayers().contains(username)) return new ResponseDto("Already in room", 200);
-
-            room.getPlayerHands().put(room.getPlayerHands().size() + 1, new ArrayList<>());
+            if (room.getPlayers().contains(username)) return new ResponseDto("Already in room", 200);//todo test
+            room.getPlayers().add(username);
+//            room.getPlayerHands().put(room.getPlayerHands().size() + 1, new ArrayList<>());
             return new ResponseDto("Successfully joined your room", 200);
         } else return new ResponseDto("Requested room doesn't exist", 404);
     }
@@ -62,8 +62,8 @@ public class RoomService {
             if (room.isGameIsRunning()) return new ResponseDto("Game already in progress", 401);
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new ResponseDto("You are not the room owner", 403);
-
             room.startGame();
+            room.printAll();
             return new ResponseDto("Game started", 200);
         } else return new ResponseDto("Requested room doesn't exist", 404);
     }
@@ -90,11 +90,12 @@ public class RoomService {
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
             Room room = activeRooms.get(gameAction.getRoomKey());
             gameResponse = room.playTurn(gameAction);
-
+            room.printAll();
             //todo dodaj pravilan return
 
         } else {
-            System.err.println("NESTO JE MNOGO LOSE");
+            System.err.println("ne postojeca soba?");
+            System.err.println(activeRooms);
         }
 
         return gameResponse;
@@ -102,9 +103,13 @@ public class RoomService {
 
 
     public GameResponse drawCard(String roomKey) {
+        GameResponse gameResponse = null;
+
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
-            return room.drawCard();
+            gameResponse = room.drawCard();
+            room.printAll();
+            return gameResponse;
         } else {
             System.err.println("NESTO JE MNOGO LOSE");
             return null;
