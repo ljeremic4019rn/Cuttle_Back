@@ -255,7 +255,7 @@ public class Room extends Thread{
 
         int playedCardRank = Integer.parseInt(playedCardSplit[0]);
         int playedOntoCardRank;
-        String cardToScuttle ;
+        String scuttledCardForGraveyard ;
 
         ArrayList<String> jacksToSendToGraveyard = new ArrayList<>();
         boolean cardWasJacked = false;
@@ -265,8 +265,8 @@ public class Room extends Thread{
         //then send regular point card to graveyard
         if (ontoPlayedCardSplit[0].equals("J")) {
             cardWasJacked = true;
-            playedOntoCardRank = Integer.parseInt(playedCardSplit[playedCardSplit.length - 2]); //skipping jacks
-            cardToScuttle = ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2] + "_" + ontoPlayedCardSplit[ontoPlayedCardSplit.length - 1];//onto card it self
+            playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2]); //skipping jacks
+            scuttledCardForGraveyard = playedOntoCardRank + "_" + ontoPlayedCardSplit[ontoPlayedCardSplit.length - 1];//onto card it self
 
             int jackCounter = 0;
             String card;
@@ -279,15 +279,15 @@ public class Room extends Thread{
         }
         else {
             playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[0]);
-            cardToScuttle = gameAction.getOntoCardPlayed();
+            scuttledCardForGraveyard = gameAction.getOntoCardPlayed();
         }
 
         //if card played is bigger scuttle
         if (playedCardRank > playedOntoCardRank) {
             playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());//remove card we are scuttling with
-            playerTables.get(gameAction.getOntoPlayer()).remove(cardToScuttle);//remove scuttled card
+            playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove scuttled card
             graveyard.add(gameAction.getCardPlayed());//add card we are scuttling with to graveyard
-            graveyard.add(cardToScuttle);//add scuttled to graveyard
+            graveyard.add(scuttledCardForGraveyard);//add scuttled to graveyard
             playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
             if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);//if was jacked send jacks to graveyard
             return true;
@@ -296,9 +296,9 @@ public class Room extends Thread{
         else if (playedCardRank == playedOntoCardRank) {
             if (cardSuitComparator(playedCardSplit[1], ontoPlayedCardSplit[1]) == CardComparison.BIGGER) {//check which suit is bigger
                 playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
-                playerTables.get(gameAction.getOntoPlayer()).remove(cardToScuttle);
+                playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());
                 graveyard.add(gameAction.getCardPlayed());
-                graveyard.add(cardToScuttle);
+                graveyard.add(scuttledCardForGraveyard);
                 playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
                 if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);
                 return true;

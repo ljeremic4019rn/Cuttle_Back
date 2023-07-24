@@ -87,10 +87,7 @@ public class RoomController {
     @PostMapping("/test")
     public ResponseEntity<?> test(@RequestBody GameAction gameAction){
         //todo skloni print
-//        System.out.println(stompHeaderAccessor.getUser().getName());
-
-        System.err.println("Playing");
-//        System.out.println(gameAction.toString());
+        System.out.println("Playing");
 
         if (gameAction.getActionType() == ActionType.DRAW) {
             return  ResponseEntity.ok(roomService.drawCard(gameAction.getRoomKey()));
