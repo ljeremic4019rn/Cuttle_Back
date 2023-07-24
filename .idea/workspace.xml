@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="1 works properly">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="scuttle should be good now">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -115,7 +114,7 @@
       <workItem from="1689933754778" duration="24898000" />
       <workItem from="1690020177759" duration="7505000" />
       <workItem from="1690046408454" duration="5273000" />
-      <workItem from="1690194319077" duration="5304000" />
+      <workItem from="1690194319077" duration="8227000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -215,7 +214,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690198352947</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="scuttle should be good now">
+      <created>1690201561421</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1690201561421</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -249,107 +255,7 @@
     <MESSAGE value="fixing theoretical bugs" />
     <MESSAGE value="fixed some major bugs (still testing)" />
     <MESSAGE value="1 works properly" />
-    <option name="LAST_COMMIT_MESSAGE" value="1 works properly" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>273</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>274</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>275</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>276</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>285</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>295</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>296</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>286</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>287</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>288</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>289</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>290</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>291</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>297</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>298</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>299</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>300</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>301</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>302</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="scuttle should be good now" />
+    <option name="LAST_COMMIT_MESSAGE" value="scuttle should be good now" />
   </component>
 </project>
