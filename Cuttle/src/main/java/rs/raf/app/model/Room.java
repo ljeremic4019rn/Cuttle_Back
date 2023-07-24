@@ -311,7 +311,6 @@ public class Room extends Thread{
     //todo PROVER APSOLUTNO SVAKU POWER FUNKCIJU DA LI DOBRO RADI
 
     private boolean play1power(GameAction gameAction) {
-        //todo testing cardsToRemove ne mozes da iteriras kroz listu i da brises
         //todo trenutno nema za ako je karta jacked, obstace na terenu
 
         //go through all player tables
@@ -329,6 +328,19 @@ public class Room extends Thread{
                     cardsToRemove.add(card);
                     cardsForGraveyard.add(card);//todo ovde ce biti drugacija karta kada se uradi ja jacked karte
 //                    graveyard.add(card);
+                }
+                else if (cardSplit[0].equals("J")) {//todo proveri ovo dal je dobro
+                    int jackCounter = 0;
+                    String jackCard;
+                    String cardToScuttle = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];//onto card it self
+                    //collect all jacks to send to graveyard
+                    while (cardSplit[jackCounter].equals("J")) { //J_S_<id>_10_S - we are splitting this
+                        jackCard = cardSplit[jackCounter] + "_" + cardSplit[jackCounter + 1]; //ctr = J + _ + S
+                        cardsForGraveyard.add(jackCard);//add all jacks to graveyard
+                        jackCounter = jackCounter + 3;
+                    }
+                    cardsForGraveyard.add(cardToScuttle);
+                    cardsToRemove.add(card);//remove the actual jacked card
                 }
             }
             cardsOnTableList.removeAll(cardsToRemove); //removing all points from table

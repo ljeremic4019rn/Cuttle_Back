@@ -28,6 +28,10 @@ public class RoomService {
     //todo napravi da moze da se izadje iz sobe
 
     //todo napravi "scraper" koji ubija prazne sobe
+    /*
+    imati mapu recently napravljenih soba, npr 2 min
+    ako nakon 5 min nije poceta soba moze da se isprazni ili ubije
+     */
 
 
     public String createRoom(String owner_username) {
@@ -90,8 +94,9 @@ public class RoomService {
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
             Room room = activeRooms.get(gameAction.getRoomKey());
             gameResponse = room.playTurn(gameAction);
+
+            System.out.println(gameAction.getActionType());//todo obrisi na kraju
             room.printAll();
-            //todo dodaj pravilan return
 
         } else {
             System.err.println("ne postojeca soba?");
@@ -108,7 +113,10 @@ public class RoomService {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
             gameResponse = room.drawCard();
+
+            System.out.println("DRAW");//todo obrisi na kraju
             room.printAll();
+
             return gameResponse;
         } else {
             System.err.println("NESTO JE MNOGO LOSE");
