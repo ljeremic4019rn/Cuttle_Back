@@ -389,8 +389,8 @@ public class Room extends Thread{
 
                 //exchange points
                 int pointsToExchange = Integer.parseInt(ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2]);
-                playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn) + pointsToExchange);
-                playerScore.put(gameAction.getOntoPlayer(), playerScore.get(currentPlayersTurn) - pointsToExchange);
+                playerScore.put(playerToReturnCardTo, playerScore.get(playerToReturnCardTo) + pointsToExchange);//todo test
+                playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - pointsToExchange);
             }
             //Q_S...
             case "Q", "P" -> {
@@ -471,35 +471,31 @@ public class Room extends Thread{
     private boolean play6power(GameAction gameAction) {
 
         //go through all player tables
-        playerTables.forEach((playerId, cardsOnTableList) -> {
+        for (Map.Entry<Integer, ArrayList<String>> playerTable : playerTables.entrySet()) {
             cardsToRemove.clear();
             cardsForGraveyard.clear();
             String[] cardSplit;
 
             //go through all cards and remove all permanent effect (image) cards
-            for (String card : cardsOnTableList) {
+            for (int i = 0; i < playerTable.getValue().size(); i++) {
+                String card = playerTable.getValue().get(i);
+
                 cardSplit = card.split("_");
                 //if its an image card or 8 in power remove it
                 switch (cardSplit[0]) {
                     case "Q" -> {
-//                        cardsOnTableList.remove(card);
-//                        graveyard.add(card);
                         cardsToRemove.add(card);
                         cardsForGraveyard.add(card);
                     }
                     case "P" -> {
-//                        cardsOnTableList.remove(card);
-//                        graveyard.add(card8withoutP);
                         String card8withoutP = cardSplit[1] + "_" + cardSplit[2];
                         cardsToRemove.add(card);
                         cardsForGraveyard.add(card8withoutP);
                     }
                     case "K" -> {
-//                        cardsOnTableList.remove(card);
-//                        graveyard.add(card);
                         cardsToRemove.add(card);
                         cardsForGraveyard.add(card);
-                        playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) - 1);//remove one king to king tracker map
+                        playerKings.put(playerTable.getKey(), playerKings.get(playerTable.getKey()) - 1);//remove one king to king tracker map
                     }
                     //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
                     //J_S_<id>_10_C || J_S_<id>_J_C_<id>_J_H_<id>_10_C
@@ -518,15 +514,20 @@ public class Room extends Thread{
                         //return the point card to og owner
                         int ogOwnerId = Integer.parseInt(cardSplit[cardSplit.length - 3]);//we are taking the last <id> aka first owner
                         String cardToGiveBack = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];
-//                        cardsOnTableList.remove(card);//remove jacked card from table
                         cardsToRemove.add(card);//remove jacked card from table
                         playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
+
+                        //exchange points
+                        String []cardToGiveBackSplit = cardToGiveBack.split("_");
+                        int pointsToExchange = Integer.parseInt(cardToGiveBackSplit[0]);//get points to exchange
+                        playerScore.put(ogOwnerId, playerScore.get(ogOwnerId) + pointsToExchange);//todo test
+                        playerScore.put(playerTable.getKey(), playerScore.get(playerTable.getKey()) - pointsToExchange);
                     }
                 }
             }
             graveyard.addAll(cardsForGraveyard);//todo testiraj
-            cardsOnTableList.removeAll(cardsToRemove);
-        });
+            playerTable.getValue().removeAll(cardsToRemove);
+        }
 
         //send 6 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
@@ -626,11 +627,12 @@ public class Room extends Thread{
     }
 
     private boolean playJackPower(GameAction gameAction) {
-        ArrayList<String> stealFromPlayerTable = playerTables.get(gameAction.getFromPlayer());
+        ArrayList<String> stealFromPlayerTable = playerTables.get(gameAction.getOntoPlayer());
 
         //if queen on table, need to remove it first to play jack on point card
         if (stealFromPlayerTable.contains("Q_C") || stealFromPlayerTable.contains("Q_H") || stealFromPlayerTable.contains("Q_D") || stealFromPlayerTable.contains("Q_S")) {
             System.err.println("There is a queen on the table");
+            //TODO MOZDA DA SE STAVI CURRENT PLYAER - 1
             return false;
         }
         //else steal the cards to me
@@ -638,14 +640,14 @@ public class Room extends Thread{
             //edit the card, remove Jack from my hand, remove card from enemy table, add Jacked card to my table
             //final result = J_S_<stolen from player id>_10_S
             String[] playedCardSplit = gameAction.getOntoCardPlayed().split("_");
-            int pointsToExchange = Integer.parseInt(playedCardSplit[playedCardSplit.length - 2]);//get points to exchange
             String cardWithJackOnTop = gameAction.getCardPlayed() + "_" + gameAction.getOntoPlayer() + "_" + gameAction.getOntoCardPlayed();//build a jacked card
             playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());//remove jack from hand
             playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove og card
             playerTables.get(currentPlayersTurn).add(cardWithJackOnTop);//replace with jacked card version
             //exchange points
-            playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn) + pointsToExchange);
-            playerScore.put(gameAction.getOntoPlayer(), playerScore.get(currentPlayersTurn) - pointsToExchange);
+            int pointsToExchange = Integer.parseInt(playedCardSplit[playedCardSplit.length - 2]);//get points to exchange
+            playerScore.put(gameAction.getFromPlayer(), playerScore.get(gameAction.getFromPlayer()) + pointsToExchange);
+            playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - pointsToExchange);
         }
         return true;
     }
