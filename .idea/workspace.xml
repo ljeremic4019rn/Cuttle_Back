@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="scuttle should be good now">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="Jacking and 2power work now">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +115,7 @@
       <workItem from="1689933754778" duration="24898000" />
       <workItem from="1690020177759" duration="7505000" />
       <workItem from="1690046408454" duration="5273000" />
-      <workItem from="1690194319077" duration="8227000" />
+      <workItem from="1690194319077" duration="10244000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -221,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690201561421</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Jacking and 2power work now">
+      <created>1690204294290</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1690204294290</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +264,7 @@
     <MESSAGE value="fixed some major bugs (still testing)" />
     <MESSAGE value="1 works properly" />
     <MESSAGE value="scuttle should be good now" />
-    <option name="LAST_COMMIT_MESSAGE" value="scuttle should be good now" />
+    <MESSAGE value="Jacking and 2power work now" />
+    <option name="LAST_COMMIT_MESSAGE" value="Jacking and 2power work now" />
   </component>
 </project>

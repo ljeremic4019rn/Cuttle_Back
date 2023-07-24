@@ -114,7 +114,8 @@ public class Room extends Thread{
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);
             case SCUTTLE -> turnOver = playScuttleCard(gameAction);
-            case DISCARD_CARD -> turnOver = discardCardFromCurrentPlayersHand(gameAction.getCardPlayed()); //(for cards drawn by 7) we place a card we want to discard into played for convenience
+            //(for cards drawn by 7 and not played are discarded)  we place a card we want to discard into played for convenience
+            case DISCARD_CARD -> discardSelectedCardFromPlayerHand(gameAction.getCardPlayed(), currentPlayersTurn);
             case COUNTER -> turnOver = counterCardPlayed(gameAction);
             case POWER -> {
                 switch (gameAction.getCardPlayed().split("_")[0]) {
@@ -188,7 +189,7 @@ public class Room extends Thread{
         graveyard.add(gameAction.getOntoCardPlayed());
 
         //send all 2s used to graveyard
-        for (String twoCard: gameAction.getUsed2s()) {
+        for (String twoCard: gameAction.getHelperCardList()) {
             split2Card = twoCard.split("_");
             whole2Card = split2Card[0] + "_" + split2Card[1];
 
@@ -429,30 +430,24 @@ public class Room extends Thread{
     //todo trenutno je namesteno da discarduje 2 random karte iz ruke protivnika, ako mozes posle namesti da on bira 2 karte koje hoce
     private boolean play4power(GameAction gameAction) {
         int playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
-        int randomCardIndex;
 
         //if 0 nothing to discard
         if (playerHandSize == 0) return true;
             //if one remove that single one and add to graveyard
         else if (playerHandSize == 1) {
-            //todo ako ne radi discard function samo vrati manuelno (ovo ispod)
-            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(0));
-//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(0));
-//            playerHands.get(gameAction.getOntoPlayer()).remove(0);
+            discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
         }
         //remove 2 at random and add to graveyard
         else {
-            playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
-            randomCardIndex = random.nextInt(playerHandSize);
-            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-//            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
-
-            playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
-            randomCardIndex = random.nextInt(playerHandSize);
-            discardCardFromCurrentPlayersHand(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-//            graveyard.add(playerHands.get(gameAction.getOntoPlayer()).get(randomCardIndex));
-//            playerHands.get(gameAction.getOntoPlayer()).remove(randomCardIndex);
+            //if two cards are selected by enemy player on front end, discard them
+            if (gameAction.getHelperCardList().size() == 2){
+                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(0), gameAction.getOntoPlayer());
+                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(1), gameAction.getOntoPlayer());
+            }
+            else {//if player didn't select two cards, discard 2 at random
+                discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
+                discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
+            }
         }
 
         //send 4 to graveyard
@@ -701,8 +696,15 @@ public class Room extends Thread{
     }
 
 
-    private boolean discardCardFromCurrentPlayersHand(String cardToDiscard){
-        playerHands.get(currentPlayersTurn).remove(cardToDiscard);
+    private void discardRandomCardFromPlayerHand(ArrayList<String> handToDiscardCardFrom){
+        int playerHandSize = handToDiscardCardFrom.size();
+        int randomCardIndex = random.nextInt(playerHandSize);
+        graveyard.add(handToDiscardCardFrom.get(randomCardIndex));
+        handToDiscardCardFrom.remove(randomCardIndex);
+    }
+
+    private boolean discardSelectedCardFromPlayerHand(String cardToDiscard, int playerId){
+        playerHands.get(playerId).remove(cardToDiscard);
         graveyard.add(cardToDiscard);
         return true;
     }
