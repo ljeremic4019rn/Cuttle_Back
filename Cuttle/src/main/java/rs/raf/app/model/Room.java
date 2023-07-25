@@ -45,8 +45,6 @@ public class Room extends Thread{
 //    String cardDrawnWith7Card;
 
 
-    //todo stavi da bude random ko pocinje prvi
-    //todo stavi da onaj koji prvi igra dobije jednu vise kartu
     public void startGame() {
         for (int i = 0; i < players.size(); i++) {
             playerScore.put(i, 0);
@@ -309,11 +307,7 @@ public class Room extends Thread{
         return false;
     }
 
-    //todo PROVER APSOLUTNO SVAKU POWER FUNKCIJU DA LI DOBRO RADI
-
     private boolean play1power(GameAction gameAction) {
-        //todo trenutno nema za ako je karta jacked, obstace na terenu
-
         //go through all player tables
         playerTables.forEach((playerId, cardsOnTableList) -> {
             cardsToRemove.clear();
@@ -327,10 +321,10 @@ public class Room extends Thread{
                 if (cardSplit[0].equals("1") || cardSplit[0].equals("2") || cardSplit[0].equals("3") || cardSplit[0].equals("4") || cardSplit[0].equals("5")
                         || cardSplit[0].equals("6") || cardSplit[0].equals("7") || cardSplit[0].equals("8") || cardSplit[0].equals("9") || cardSplit[0].equals("10")) {
                     cardsToRemove.add(card);
-                    cardsForGraveyard.add(card);//todo ovde ce biti drugacija karta kada se uradi ja jacked karte
+                    cardsForGraveyard.add(card);
 //                    graveyard.add(card);
                 }
-                else if (cardSplit[0].equals("J")) {//todo proveri ovo dal je dobro
+                else if (cardSplit[0].equals("J")) {
                     int jackCounter = 0;
                     String jackCard;
                     String cardToScuttle = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];//onto card it self
@@ -356,7 +350,6 @@ public class Room extends Thread{
         return true;
     }
 
-    //todo code je isti kao power9 samo bez add (ako je bug kod jedne i kod druge je)
     private boolean play2power(GameAction gameAction) {
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
@@ -427,7 +420,6 @@ public class Room extends Thread{
         return true;
     }
 
-    //todo trenutno je namesteno da discarduje 2 random karte iz ruke protivnika, ako mozes posle namesti da on bira 2 karte koje hoce
     private boolean play4power(GameAction gameAction) {
         int playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
 
@@ -469,6 +461,7 @@ public class Room extends Thread{
     }
 
     private boolean play6power(GameAction gameAction) {
+        Map<Integer, String> cardsToGiveBackToOgPlayers = new HashMap<>();
 
         //go through all player tables
         for (Map.Entry<Integer, ArrayList<String>> playerTable : playerTables.entrySet()) {
@@ -515,7 +508,10 @@ public class Room extends Thread{
                         int ogOwnerId = Integer.parseInt(cardSplit[cardSplit.length - 3]);//we are taking the last <id> aka first owner
                         String cardToGiveBack = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];
                         cardsToRemove.add(card);//remove jacked card from table
-                        playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
+
+//                        playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
+                        //save which cards to give back to players in the end
+                        cardsToGiveBackToOgPlayers.put(ogOwnerId, cardToGiveBack);//todo ovo je novo, test
 
                         //exchange points
                         String []cardToGiveBackSplit = cardToGiveBack.split("_");
@@ -527,6 +523,11 @@ public class Room extends Thread{
             }
             graveyard.addAll(cardsForGraveyard);//todo testiraj
             playerTable.getValue().removeAll(cardsToRemove);
+        }
+
+        //go through saved cards and put them back on the table
+        for (Map.Entry<Integer, String> cardToGiveBack : cardsToGiveBackToOgPlayers.entrySet()) {
+            playerTables.get(cardToGiveBack.getKey()).add(cardToGiveBack.getValue());
         }
 
         //send 6 to graveyard
@@ -547,11 +548,6 @@ public class Room extends Thread{
         //draw card to play next
         playerHands.get(currentPlayersTurn).add(deck.pop());
         currentPlayersTurn-= 1;//todo proveri ovo
-
-//        cardDrawnWith7Card = deck.pop(); ovo je vrv samo govno
-//        playerWithActive7Card = currentPlayersTurn;
-//        playerHands.get(currentPlayersTurn).add(cardDrawnWith7Card);
-
         return true;
     }
 
@@ -560,9 +556,6 @@ public class Room extends Thread{
         //remove 8 from hand
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add("P_" + gameAction.getCardPlayed());
-
-        //todo stavi na front boolean "8 is in play" sto ce svima da pokaze ruke
-
         return true;
     }
 
@@ -705,10 +698,9 @@ public class Room extends Thread{
         handToDiscardCardFrom.remove(randomCardIndex);
     }
 
-    private boolean discardSelectedCardFromPlayerHand(String cardToDiscard, int playerId){
+    private void discardSelectedCardFromPlayerHand(String cardToDiscard, int playerId){
         playerHands.get(playerId).remove(cardToDiscard);
         graveyard.add(cardToDiscard);
-        return true;
     }
 
     private void swapTurnToNextPlayer(){
@@ -759,9 +751,6 @@ public class Room extends Thread{
         System.out.print("\n");    }
 
     private void printPlayScore(){
-//        playerScore.forEach((key, value) -> {
-//            System.out.println("player " + key + " = {" + value + "}");
-//        });
         System.out.println(playerScore.toString());
     }
 

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="4 works and modified to accept cards to discard from front">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="fixed jacked again, 6 is still broken">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
     </list>
@@ -114,7 +114,8 @@
       <workItem from="1689933754778" duration="24898000" />
       <workItem from="1690020177759" duration="7505000" />
       <workItem from="1690046408454" duration="5273000" />
-      <workItem from="1690194319077" duration="14509000" />
+      <workItem from="1690194319077" duration="14937000" />
+      <workItem from="1690277351945" duration="3079000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -235,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690206294130</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fixed jacked again, 6 is still broken">
+      <created>1690210912688</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1690210912688</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,87 +280,7 @@
     <MESSAGE value="scuttle should be good now" />
     <MESSAGE value="Jacking and 2power work now" />
     <MESSAGE value="4 works and modified to accept cards to discard from front" />
-    <option name="LAST_COMMIT_MESSAGE" value="4 works and modified to accept cards to discard from front" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>390</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>391</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>392</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>393</line>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>473</line>
-          <option name="timeStamp" value="79" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>476</line>
-          <option name="timeStamp" value="81" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>482</line>
-          <option name="timeStamp" value="84" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>479</line>
-          <option name="timeStamp" value="85" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>503</line>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>511</line>
-          <option name="timeStamp" value="90" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>516</line>
-          <option name="timeStamp" value="91" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>517</line>
-          <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>522</line>
-          <option name="timeStamp" value="93" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>523</line>
-          <option name="timeStamp" value="94" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java</url>
-          <line>527</line>
-          <option name="timeStamp" value="95" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="fixed jacked again, 6 is still broken" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed jacked again, 6 is still broken" />
   </component>
 </project>
