@@ -1,5 +1,7 @@
 package rs.raf.app.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,6 +15,7 @@ import rs.raf.app.model.actions.ActionType;
 import rs.raf.app.model.actions.GameAction;
 import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.User;
+import rs.raf.app.model.actions.StartGameResponse;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.responses.RoomKeyResponse;
 import rs.raf.app.services.RoomService;
@@ -55,10 +58,18 @@ public class RoomController {
 
     @PostMapping("/startRoom/{roomKey}")
     public ResponseEntity<?> startRoom(@PathVariable String roomKey){
+        ObjectMapper mapper = new ObjectMapper();
+        String userJsonBody;
+
+
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
-        ResponseDto responseDto = roomService.startGame(roomKey, user.get().getUsername());
-        return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
+        StartGameResponse startGameResponse = roomService.startGame(roomKey, user.get().getUsername());
+
+        if (startGameResponse.getGameResponse() == null){
+            return ResponseEntity.status(startGameResponse.getResponseDto().getResponseCode()).body(startGameResponse.getResponseDto().getResponse());
+        }
+        else return ResponseEntity.ok(startGameResponse.getGameResponse());
     }
 
     @PostMapping("/stopRoom/{roomKey}")
@@ -84,6 +95,7 @@ public class RoomController {
         return ResponseEntity.ok("Socket updated");
     }
 
+    @Deprecated
     @PostMapping("/test")
     public ResponseEntity<?> test(@RequestBody GameAction gameAction){
         //todo skloni print

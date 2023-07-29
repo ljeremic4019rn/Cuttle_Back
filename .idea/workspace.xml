@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="6 is finally fixed">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="9 works, J, Q and K tested and work, (should be ready for front now)">
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/StartGameResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +24,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -39,6 +44,7 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="ProjectId" id="2SmudigycmcnqamaB7vlPUpZh4S" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -61,6 +67,7 @@
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.29919446&quot;,
@@ -115,7 +122,12 @@
       <workItem from="1690020177759" duration="7505000" />
       <workItem from="1690046408454" duration="5273000" />
       <workItem from="1690194319077" duration="14937000" />
-      <workItem from="1690277351945" duration="5596000" />
+      <workItem from="1690277351945" duration="7528000" />
+      <workItem from="1690298489731" duration="600000" />
+      <workItem from="1690312094822" duration="599000" />
+      <workItem from="1690370347536" duration="599000" />
+      <workItem from="1690563303337" duration="3110000" />
+      <workItem from="1690620273738" duration="6107000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>
@@ -250,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690287411503</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="9 works, J, Q and K tested and work, (should be ready for front now)">
+      <created>1690289785183</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1690289785183</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -289,6 +308,7 @@
     <MESSAGE value="4 works and modified to accept cards to discard from front" />
     <MESSAGE value="fixed jacked again, 6 is still broken" />
     <MESSAGE value="6 is finally fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="6 is finally fixed" />
+    <MESSAGE value="9 works, J, Q and K tested and work, (should be ready for front now)" />
+    <option name="LAST_COMMIT_MESSAGE" value="9 works, J, Q and K tested and work, (should be ready for front now)" />
   </component>
 </project>

@@ -45,7 +45,7 @@ public class Room extends Thread{
 //    String cardDrawnWith7Card;
 
 
-    public void startGame() {
+    public GameResponse startGame() {
         for (int i = 0; i < players.size(); i++) {
             playerScore.put(i, 0);
             playerKings.put(i, 0);
@@ -59,6 +59,17 @@ public class Room extends Thread{
 
         System.err.println(players.toString());
 
+        gameResponse = new GameResponse(
+                GameResponseType.REGULAR_GO_NEXT,
+                currentPlayersTurn,
+                deck,
+                graveyard,
+                playerHands,
+                playerTables,
+                playerScore,
+                -1
+        );
+        return gameResponse;
     }
 
     /*
@@ -139,6 +150,7 @@ public class Room extends Thread{
         gameResponse = new GameResponse(
                 GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
+                deck,
                 graveyard,
                 playerHands,
                 playerTables,
@@ -162,6 +174,7 @@ public class Room extends Thread{
         gameResponse = new GameResponse(
                 GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
+                deck,
                 graveyard,
                 playerHands,
                 playerTables,
