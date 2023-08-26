@@ -3,6 +3,7 @@ package rs.raf.app.model.actions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import rs.raf.app.model.actions.enums.ActionType;
 
 import java.util.List;
 

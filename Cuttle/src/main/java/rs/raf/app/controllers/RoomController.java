@@ -1,7 +1,5 @@
 package rs.raf.app.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,13 +9,14 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import rs.raf.app.model.actions.ActionType;
+import rs.raf.app.model.actions.enums.ActionType;
 import rs.raf.app.model.actions.GameAction;
-import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.User;
 import rs.raf.app.model.actions.StartGameResponse;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.responses.RoomKeyResponse;
+import rs.raf.app.responses.RoomUpdateType;
+import rs.raf.app.responses.RoomUpdateResponse;
 import rs.raf.app.services.RoomService;
 import rs.raf.app.services.UserService;
 
@@ -45,8 +44,14 @@ public class RoomController {
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
         ResponseDto responseDto = roomService.joinRoom(roomKey, user.get().getUsername());
+        if (responseDto.getResponseCode() == 200) {
+            RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.JOIN);
+            roomUpdateResponse.setCurrentPlayersInRoom(roomService.getRoomPlayers(roomKey));
+            this.simpMessagingTemplate.convertAndSend("/cuttle/updateRoom/" + roomKey, roomUpdateResponse);
+        }
         return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
     }
+
 
     @PostMapping("/createRoom")
     public ResponseEntity<?> createRoom(){
@@ -58,10 +63,6 @@ public class RoomController {
 
     @PostMapping("/startRoom/{roomKey}")
     public ResponseEntity<?> startRoom(@PathVariable String roomKey){
-        ObjectMapper mapper = new ObjectMapper();
-        String userJsonBody;
-
-
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
         StartGameResponse startGameResponse = roomService.startGame(roomKey, user.get().getUsername());
@@ -69,8 +70,15 @@ public class RoomController {
         if (startGameResponse.getGameResponse() == null){
             return ResponseEntity.status(startGameResponse.getResponseDto().getResponseCode()).body(startGameResponse.getResponseDto().getResponse());
         }
-        else return ResponseEntity.ok(startGameResponse.getGameResponse());
+        else {
+            RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.START);
+            roomUpdateResponse.setGameResponse(startGameResponse.getGameResponse());
+            this.simpMessagingTemplate.convertAndSend("/cuttle/updateRoom/" + roomKey, roomUpdateResponse);
+            return ResponseEntity.ok(startGameResponse.getGameResponse());
+        }
     }
+
+
 
     @PostMapping("/stopRoom/{roomKey}")
     public ResponseEntity<?> stopRoom(@PathVariable String roomKey){
@@ -95,19 +103,18 @@ public class RoomController {
         return ResponseEntity.ok("Socket updated");
     }
 
-    @Deprecated
-    @PostMapping("/test")
-    public ResponseEntity<?> test(@RequestBody GameAction gameAction){
-        //todo skloni print
-        System.out.println("Playing");
-
-        if (gameAction.getActionType() == ActionType.DRAW) {
-            return  ResponseEntity.ok(roomService.drawCard(gameAction.getRoomKey()));
-        }
-        else {
-            return ResponseEntity.ok(roomService.playCard(gameAction));
-        }
-//        return ResponseEntity.ok("Socket updated");
-    }
+//    @Deprecated
+//    @PostMapping("/test")
+//    public ResponseEntity<?> test(@RequestBody GameAction gameAction){
+//        System.out.println("Playing");
+//
+//        if (gameAction.getActionType() == ActionType.DRAW) {
+//            return  ResponseEntity.ok(roomService.drawCard(gameAction.getRoomKey()));
+//        }
+//        else {
+//            return ResponseEntity.ok(roomService.playCard(gameAction));
+//        }
+////        return ResponseEntity.ok("Socket updated");
+//    }
 
 }

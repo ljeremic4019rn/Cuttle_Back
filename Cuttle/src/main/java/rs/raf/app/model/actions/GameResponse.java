@@ -2,6 +2,7 @@ package rs.raf.app.model.actions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import rs.raf.app.model.actions.enums.GameResponseType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

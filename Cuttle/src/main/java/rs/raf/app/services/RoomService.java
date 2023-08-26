@@ -1,11 +1,13 @@
 package rs.raf.app.services;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.Room;
 import rs.raf.app.model.actions.*;
+import rs.raf.app.responses.JoinRoomResponse;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.utils.RoomKeyGenerator;
 
@@ -17,8 +19,9 @@ import java.util.Map;
 public class RoomService {
 
     //todo namesti da igraci biraju player size kada pokrenu sobu
-    private static final int NUMBER_OF_PLAYERS = 3;
+    private static final int MAX_NUMBER_OF_PLAYERS = 4;
     private final Map<String, Room> activeRooms = new HashMap<>();
+    ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     public RoomService() {
@@ -49,12 +52,24 @@ public class RoomService {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
             if (room.isGameIsRunning()) return new ResponseDto("Game already in progress", 401);
-            if (room.getPlayerHands().size() == NUMBER_OF_PLAYERS)
+            if (room.getPlayerHands().size() == MAX_NUMBER_OF_PLAYERS)
                 return new ResponseDto("Maximum room capacity reached", 401);
             if (room.getPlayers().contains(username)) return new ResponseDto("Already in room", 200);//todo test
             room.getPlayers().add(username);
-            return new ResponseDto("Successfully joined your room, your number is " + (room.getPlayers().size() - 1), 200);
-        } else return new ResponseDto("Requested room doesn't exist", 404);
+
+            String userJsonBody;
+            JoinRoomResponse joinRoomResponse = new JoinRoomResponse(username, room.getPlayers().size() - 1, room.getPlayers());
+
+            try {
+                userJsonBody = mapper.writeValueAsString(joinRoomResponse);
+            } catch (JsonProcessingException e) {
+                return new ResponseDto("Error while joining room", 500);
+            }
+
+//            return new ResponseDto("Successfully joined your room -" + username + "-, your number is -" + (room.getPlayers().size() - 1) + "-", 200);
+            return new ResponseDto(userJsonBody, 200);
+        }
+        else return new ResponseDto("Requested room doesn't exist", 404);
     }
 
 
@@ -119,6 +134,16 @@ public class RoomService {
 
             return gameResponse;
         } else {
+            System.err.println("NESTO JE MNOGO LOSE");
+            return null;
+        }
+    }
+
+    public ArrayList<String> getRoomPlayers(String roomKey){
+        if (activeRooms.containsKey(roomKey)) {
+            return activeRooms.get(roomKey).getPlayers();
+        }
+        else {
             System.err.println("NESTO JE MNOGO LOSE");
             return null;
         }

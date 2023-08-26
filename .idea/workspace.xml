@@ -5,11 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="9 works, J, Q and K tested and work, (should be ready for front now)">
-      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/StartGameResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/JoinRoomResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/ActionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/CardComparison.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/CardComparison.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponseType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/GameResponseType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,8 +29,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -88,6 +94,7 @@
       <recent name="C:\Users\Shus\Desktop\Diplomski\Cuttle_Back\Cuttle" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="rs.raf.app.responses" />
       <recent name="rs.raf.demo.utils" />
       <recent name="rs.raf.demo.services" />
       <recent name="rs.raf.demo.controllers" />
@@ -128,6 +135,11 @@
       <workItem from="1690370347536" duration="599000" />
       <workItem from="1690563303337" duration="3110000" />
       <workItem from="1690620273738" duration="6107000" />
+      <workItem from="1691497594435" duration="599000" />
+      <workItem from="1692877651463" duration="4063000" />
+      <workItem from="1692953423206" duration="1326000" />
+      <workItem from="1692959189091" duration="5156000" />
+      <workItem from="1693047711850" duration="8576000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>

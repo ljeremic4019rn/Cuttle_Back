@@ -3,6 +3,8 @@ package rs.raf.app.model;
 import lombok.Getter;
 import lombok.Setter;
 import rs.raf.app.model.actions.*;
+import rs.raf.app.model.actions.enums.CardComparison;
+import rs.raf.app.model.actions.enums.GameResponseType;
 
 import java.util.*;
 
