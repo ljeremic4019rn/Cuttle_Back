@@ -4,19 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="9 works, J, Q and K tested and work, (should be ready for front now)">
-      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/JoinRoomResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateType.java" afterDir="false" />
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="added controller functionalities for global joining and global starting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/ActionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/CardComparison.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/CardComparison.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/GameResponseType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/actions/enums/GameResponseType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,6 +130,9 @@
       <workItem from="1692953423206" duration="1326000" />
       <workItem from="1692959189091" duration="5156000" />
       <workItem from="1693047711850" duration="8576000" />
+      <workItem from="1694021153341" duration="1240000" />
+      <workItem from="1694100579689" duration="1229000" />
+      <workItem from="1694184980896" duration="4872000" />
     </task>
     <task id="LOCAL-00001" summary="rade basic sobe">
       <created>1689766635936</created>

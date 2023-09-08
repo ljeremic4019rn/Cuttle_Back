@@ -149,30 +149,14 @@ public class Room extends Thread{
         //todo mozda skloni ovaj boolean jer je malo usless
         if (!turnOver) System.err.println("KURAC SE DESIO, NADJI PROBLEM");
 
-        gameResponse = new GameResponse(
-                GameResponseType.REGULAR_GO_NEXT,
-                currentPlayersTurn,
-                deck,
-                graveyard,
-                playerHands,
-                playerTables,
-                playerScore,
-                -1
-        );
-
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
             System.err.println("POBEDIO JE IGRAC " + currentPlayersTurn);//todo skloni
             gameResponse.setGameResponseType(GameResponseType.GAME_OVER_WON);
             gameResponse.setPlayerWhoWon(playerWhoWon);
         }
+
         swapTurnToNextPlayer();
-        return gameResponse;
-    }
-
-    public GameResponse drawCard() {
-        playerHands.get(currentPlayersTurn).add(deck.pop());
-
         gameResponse = new GameResponse(
                 GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
@@ -183,7 +167,23 @@ public class Room extends Thread{
                 playerScore,
                 -1
         );
+
+        return gameResponse;
+    }
+
+    public GameResponse drawCard() {
+        playerHands.get(currentPlayersTurn).add(deck.pop());
         swapTurnToNextPlayer();
+        gameResponse = new GameResponse(
+                GameResponseType.REGULAR_GO_NEXT,
+                currentPlayersTurn,
+                deck,
+                graveyard,
+                playerHands,
+                playerTables,
+                playerScore,
+                -1
+        );
         return gameResponse;
     }
 
@@ -282,13 +282,13 @@ public class Room extends Thread{
             playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2]); //skipping jacks
             scuttledCardForGraveyard = playedOntoCardRank + "_" + ontoPlayedCardSplit[ontoPlayedCardSplit.length - 1];//onto card it self
 
-            int jackCounter = 0;
+            int positionCounter = 0;
             String card;
             //collect all jacks to send to graveyard
-            while (ontoPlayedCardSplit[jackCounter].equals("J")) { //J_S_<id>_10_S - we are splitting this
-                card = ontoPlayedCardSplit[jackCounter] + "_" + ontoPlayedCardSplit[jackCounter + 1]; //ctr = J + _ + S
+            while (ontoPlayedCardSplit[positionCounter].equals("J")) { //J_S_<id>_10_S - we are splitting this
+                card = ontoPlayedCardSplit[positionCounter] + "_" + ontoPlayedCardSplit[positionCounter + 1]; //ctr = J + _ + S
                 jacksToSendToGraveyard.add(card);
-                jackCounter = jackCounter + 3;
+                positionCounter = positionCounter + 3;
             }
         }
         else {
