@@ -93,6 +93,7 @@ public class RoomController {
     public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
         //todo skloni print
         System.out.println(stompHeaderAccessor.getUser().getName());
+        System.out.println(gameAction);
 
         if (gameAction.getActionType() == ActionType.DRAW) {
             this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.drawCard(gameAction.getRoomKey()));
