@@ -41,6 +41,7 @@ public class Room extends Thread{
     Random random = new Random();
     ArrayList <String> cardsToRemove = new ArrayList<>();
     ArrayList <String> cardsForGraveyard = new ArrayList<>();
+    GameResponseType gameResponseType = GameResponseType.REGULAR_GO_NEXT;
 
 
 //    int playerWithActive7Card;
@@ -119,6 +120,7 @@ public class Room extends Thread{
 
 
     public GameResponse playTurn(GameAction gameAction) {
+        gameResponseType = GameResponseType.REGULAR_GO_NEXT;
 
         //todo wait za uskok 2 ce se uraditi na frontu
 
@@ -136,7 +138,10 @@ public class Room extends Thread{
                     case "4" -> turnOver = play4power(gameAction);
                     case "5" -> turnOver = play5power(gameAction);
                     case "6" -> turnOver = play6power(gameAction);
-                    case "7" -> turnOver = play7power(gameAction);
+                    case "7" -> {
+                        turnOver = play7power(gameAction);
+                        gameResponseType = GameResponseType.SEVEN;
+                    }
                     case "8" -> turnOver = play8power(gameAction);
                     case "9" -> turnOver = play9power(gameAction);
                     case "J" -> turnOver = playJackPower(gameAction);
@@ -152,20 +157,20 @@ public class Room extends Thread{
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
             System.err.println("POBEDIO JE IGRAC " + currentPlayersTurn);//todo skloni
-            gameResponse.setGameResponseType(GameResponseType.GAME_OVER_WON);
-            gameResponse.setPlayerWhoWon(playerWhoWon);
+            gameResponseType = GameResponseType.GAME_OVER_WON;
+//            gameResponse.setPlayerWhoWon(playerWhoWon);
         }
 
         swapTurnToNextPlayer();
         gameResponse = new GameResponse(
-                GameResponseType.REGULAR_GO_NEXT,
+                gameResponseType,
                 currentPlayersTurn,
                 deck,
                 graveyard,
                 playerHands,
                 playerTables,
                 playerScore,
-                -1
+                playerWhoWon
         );
 
         return gameResponse;
