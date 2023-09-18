@@ -3,7 +3,6 @@ package rs.raf.app.model;
 import lombok.Data;
 
 @Data
-@Deprecated
 public class Message {
     private String from;
     private String text;

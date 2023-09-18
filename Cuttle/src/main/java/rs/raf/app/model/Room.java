@@ -24,6 +24,8 @@ public class Room extends Thread{
     private ArrayList<String> players = new ArrayList<>(); // prvi koji udje je owner
     private int currentPlayersTurn = 0;
     private int playerWhoWon = -1;
+    private String playerWhoWonName = "";
+
 
     //decks
     private ArrayList<String> setUpDeck = new ArrayList<>();
@@ -70,7 +72,7 @@ public class Room extends Thread{
                 playerHands,
                 playerTables,
                 playerScore,
-                -1
+                ""
         );
         return gameResponse;
     }
@@ -127,10 +129,14 @@ public class Room extends Thread{
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);
             case SCUTTLE -> turnOver = playScuttleCard(gameAction);
+            case SKIP -> {}
             //(for cards drawn by 7 and not played are discarded)  we place a card we want to discard into played for convenience
             case DISCARD_CARD -> discardSelectedCardFromPlayerHand(gameAction.getCardPlayed(), currentPlayersTurn);
             case COUNTER -> turnOver = counterCardPlayed(gameAction);
             case POWER -> {
+                if (gameAction.getHelperCardList().size() != 0)
+                    clearHelperCardList(gameAction.getHelperCardList());
+
                 switch (gameAction.getCardPlayed().split("_")[0]) {
                     case "1" -> turnOver = play1power(gameAction);
                     case "2" -> turnOver = play2power(gameAction);
@@ -151,14 +157,14 @@ public class Room extends Thread{
             }
         }
 
-        //todo mozda skloni ovaj boolean jer je malo usless
-        if (!turnOver) System.err.println("KURAC SE DESIO, NADJI PROBLEM");
+        //todo mozda skloni ovaj boolean samo za provere
+        if (!turnOver) System.err.println("PROBLEM SE DESIO NADJI ");
 
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
             System.err.println("POBEDIO JE IGRAC " + currentPlayersTurn);//todo skloni
             gameResponseType = GameResponseType.GAME_OVER_WON;
-//            gameResponse.setPlayerWhoWon(playerWhoWon);
+            playerWhoWonName = players.get(playerWhoWon);
         }
 
         swapTurnToNextPlayer();
@@ -170,7 +176,7 @@ public class Room extends Thread{
                 playerHands,
                 playerTables,
                 playerScore,
-                playerWhoWon
+                playerWhoWonName
         );
 
         return gameResponse;
@@ -187,7 +193,7 @@ public class Room extends Thread{
                 playerHands,
                 playerTables,
                 playerScore,
-                -1
+                ""
         );
         return gameResponse;
     }
@@ -199,12 +205,12 @@ public class Room extends Thread{
 
     - also if a 2 is countered by another 2 it will be handled front side aka if 2Played var is filled it will just empty it (action passes), therefor countering a 2 with 2
      */
-    private boolean counterCardPlayed(GameAction gameAction){
+    private boolean counterCardPlayed(GameAction gameAction){//this happens when the base card was countered and there is 1 or 3 counter cards to sent to graveyard
         String []split2Card;
         String whole2Card;
         //send the countered card to graveyard
-        playerHands.get(currentPlayersTurn).remove(gameAction.getOntoCardPlayed());
-        graveyard.add(gameAction.getOntoCardPlayed());
+        playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
+        graveyard.add(gameAction.getCardPlayed());
 
         //send all 2s used to graveyard
         for (String twoCard: gameAction.getHelperCardList()) {
@@ -218,18 +224,25 @@ public class Room extends Thread{
         return true;
     }
 
+    //this happens (every turn) when card is double countered aka somebody countered a counter
+    //so the card goes through but the counter cards need to be sent to graveyard
+    private void clearHelperCardList(List<String> helperCardList){//<rank>_<suit>_<playerId> 2_S_3
+        String []splitCard;
+        String wholeCard;
+
+        //send all 2s used to graveyard
+        for (String card: helperCardList) {
+            splitCard = card.split("_");
+            wholeCard = splitCard[0] + "_" + splitCard[1];
+            playerHands.get(Integer.parseInt(splitCard[2])).remove(wholeCard);//remove 2 from players hand
+            graveyard.add(wholeCard);
+        }
+    }
+
     private int checkIfSomebodyWon(){
-
-//        System.err.println("pre checka");
-//        System.err.println(playerScore.toString());
-
-
         for (Map.Entry<Integer, Integer> entry : playerScore.entrySet()) {
             int playerId = entry.getKey();
             int numberOfKings = playerKings.get(playerId);
-
-//            System.err.println("sta???");
-//            System.err.println(entry.toString());
 
             int score = entry.getValue();
 

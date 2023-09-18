@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import rs.raf.app.model.actions.VisualUpdate;
 import rs.raf.app.model.actions.enums.ActionType;
 import rs.raf.app.model.actions.GameAction;
 import rs.raf.app.model.User;
@@ -20,6 +21,7 @@ import rs.raf.app.responses.RoomUpdateResponse;
 import rs.raf.app.services.RoomService;
 import rs.raf.app.services.UserService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -78,8 +80,6 @@ public class RoomController {
         }
     }
 
-
-
     @PostMapping("/stopRoom/{roomKey}")
     public ResponseEntity<?> stopRoom(@PathVariable String roomKey){
         Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -88,6 +88,13 @@ public class RoomController {
         return ResponseEntity.status(responseDto.getResponseCode()).body(responseDto.getResponse());
     }
 
+    @MessageMapping("/visualUpdate")
+    public ResponseEntity<?> visualRoomUpdate(@Payload VisualUpdate visualUpdate){
+        System.out.println("WE GOT THE NEW DATA");
+
+        this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + visualUpdate.getRoomKey(), visualUpdate);
+        return ResponseEntity.ok("Socket updated");
+    }
 
     @MessageMapping("/playAction")
     public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){

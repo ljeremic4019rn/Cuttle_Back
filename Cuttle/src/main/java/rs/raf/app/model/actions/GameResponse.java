@@ -19,7 +19,7 @@ public class GameResponse {
     private Map<Integer, ArrayList<String>> playerHands = new HashMap<>();
     private Map<Integer, ArrayList<String>> playerTables = new HashMap<>();
     private Map<Integer, Integer> playerScore = new HashMap<>();
-    private Integer playerWhoWon;
+    private String playerWhoWon;
 
     public GameResponse() {
     }
