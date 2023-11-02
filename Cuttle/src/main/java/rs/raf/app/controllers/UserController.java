@@ -25,11 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseDto create(@Valid @RequestBody User user) {
-        return this.userService.create(user);
-    }
-
     @GetMapping
     public Page<User> all(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         return this.userService.paginate(page, size);

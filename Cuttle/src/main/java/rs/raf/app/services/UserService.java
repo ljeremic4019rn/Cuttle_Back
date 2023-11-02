@@ -40,17 +40,11 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(myUser.get().getUsername(), myUser.get().getPassword(), new ArrayList<>());
     }
 
-    public ResponseDto create(User user) {
-        Optional<User> potentialUser = this.findByUsername(user.getUsername());
-
-        if (potentialUser.isPresent()) {
-            return new ResponseDto("Username already exists", 409);
-        }
-
+    public User create(User user) {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user = this.userRepository.save(user);
         System.out.println("Service: User created");
-        return new ResponseDto("User successfully created", 200);
+        return user;
     }
 
     public Page<User> paginate(Integer page, Integer size) {

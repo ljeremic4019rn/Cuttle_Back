@@ -4,10 +4,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import rs.raf.app.requests.LoginRequest;
+import rs.raf.app.model.User;
+import rs.raf.app.requests.AuthRequest;
 import rs.raf.app.responses.LoginResponse;
+import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.services.UserService;
 import rs.raf.app.utils.JwtUtil;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -25,15 +29,22 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (Exception   e){
-            e.printStackTrace();
+//            e.printStackTrace();
             return ResponseEntity.status(401).build();
         }
+        return ResponseEntity.ok(new LoginResponse(jwtUtil.generateToken(authRequest.getUsername())));
+    }
 
-        return ResponseEntity.ok(new LoginResponse(jwtUtil.generateToken(loginRequest.getUsername())));
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody AuthRequest authRequest){
+        if (userService.findByUsername(authRequest.getUsername()).isPresent()) {
+            return ResponseEntity.status(400).body("User with that username already exists");
+        }
+        return ResponseEntity.ok(userService.create(new User(0L, authRequest.getUsername(), authRequest.getPassword())));
     }
 
 }

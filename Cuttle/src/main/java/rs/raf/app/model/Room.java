@@ -62,8 +62,6 @@ public class Room extends Thread{
         numOfPlayers = players.size();
         gameIsRunning = true;
 
-        System.err.println(players.toString());
-
         gameResponse = new GameResponse(
                 GameResponseType.REGULAR_GO_NEXT,
                 currentPlayersTurn,
@@ -134,8 +132,10 @@ public class Room extends Thread{
             case DISCARD_CARD -> discardSelectedCardFromPlayerHand(gameAction.getCardPlayed(), currentPlayersTurn);
             case COUNTER -> turnOver = counterCardPlayed(gameAction);
             case POWER -> {
-                if (gameAction.getHelperCardList().size() != 0)
+
+                if ( !(gameAction.getCardPlayed().split("_")[0].equals("4")) && gameAction.getHelperCardList().size() != 0) {
                     clearHelperCardList(gameAction.getHelperCardList());
+                }
 
                 switch (gameAction.getCardPlayed().split("_")[0]) {
                     case "1" -> turnOver = play1power(gameAction);

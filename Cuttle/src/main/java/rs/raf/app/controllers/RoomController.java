@@ -90,7 +90,7 @@ public class RoomController {
 
     @MessageMapping("/visualUpdate")
     public ResponseEntity<?> visualRoomUpdate(@Payload VisualUpdate visualUpdate){
-        System.out.println("WE GOT THE NEW DATA");
+        System.out.println("THIS IS A VISUAL UPDATE");
 
         this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + visualUpdate.getRoomKey(), visualUpdate);
         return ResponseEntity.ok("Socket updated");
