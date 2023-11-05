@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="added restart game, and cleaned up code">
-      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/OldRoomRemover.java" afterDir="false" />
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="render setup (plz)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +63,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Shus/Programming/IdeaProjects/Year_4/Kids_domaci_1",
+    "last_opened_file_path": "C:/Users/Shus/Desktop/Diplomski/Cuttle_Back/Cuttle",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -80,7 +78,8 @@
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
-      "mysql"
+      "mysql",
+      "postgresql"
     ]
   }
 }]]></component>
@@ -89,6 +88,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Shus\Desktop\Diplomski\Cuttle_Back\Cuttle" />
+      <recent name="C:\Users\Shus\Desktop\Diplomski\Cuttle_Back\Cuttle\src\main\resources" />
       <recent name="C:\Users\Shus\Desktop\nwp diplomski\Cas 11\demo\demo\src\main\java\rs\raf\demo\responses" />
       <recent name="C:\Users\Shus\Desktop\nwp diplomski\Cas 11\demo\demo\src\main\java\rs\raf\demo\model" />
     </key>
@@ -102,7 +103,12 @@
       <recent name="rs.raf.demo.controllers" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean package -DskipTests" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Docker.Cuttle.cuttle_back: Compose Deployment">
     <configuration name="CuttleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="Cuttle" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="rs.raf.app.CuttleApplication" />
@@ -110,6 +116,42 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Cuttle.cuttle_back: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="cuttle_back" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="Cuttle/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="Cuttle.dpg-cl3vl3quuipc738nqdhg-a: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="dpg-cl3vl3quuipc738nqdhg-a" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="Cuttle/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.Cuttle.cuttle_back: Compose Deployment" />
+        <item itemvalue="Docker.Cuttle.dpg-cl3vl3quuipc738nqdhg-a: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -348,7 +390,35 @@
       <option name="project" value="LOCAL" />
       <updated>1699205018132</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="added old room remover">
+      <created>1699209052892</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1699209052892</updated>
+    </task>
+    <task id="LOCAL-00029" summary="code clean up">
+      <created>1699209156399</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1699209156399</updated>
+    </task>
+    <task id="LOCAL-00030" summary="code clean up">
+      <created>1699209214734</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1699209214734</updated>
+    </task>
+    <task id="LOCAL-00031" summary="render setup (plz)">
+      <created>1699217301428</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1699217301428</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -369,9 +439,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/demo" />
     </ignored-roots>
-    <MESSAGE value="folder name change" />
-    <MESSAGE value="pocet rad na game engine, koji obradjuje karte" />
-    <MESSAGE value="added a lot of card functions (nothing is tested yet)" />
     <MESSAGE value="changed scuttle (supports jack), added 9, J, Q, K (nothing tested)" />
     <MESSAGE value="commit pre kise :)" />
     <MESSAGE value="7 made so front will do locking and discarding" />
@@ -394,6 +461,9 @@
     <MESSAGE value="removed some todos" />
     <MESSAGE value="deleted all helper booleans (for testing)" />
     <MESSAGE value="added restart game, and cleaned up code" />
-    <option name="LAST_COMMIT_MESSAGE" value="added restart game, and cleaned up code" />
+    <MESSAGE value="added old room remover" />
+    <MESSAGE value="code clean up" />
+    <MESSAGE value="render setup (plz)" />
+    <option name="LAST_COMMIT_MESSAGE" value="render setup (plz)" />
   </component>
 </project>
