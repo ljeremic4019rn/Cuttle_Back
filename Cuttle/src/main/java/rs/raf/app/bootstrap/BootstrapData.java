@@ -5,17 +5,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import rs.raf.app.model.User;
-import rs.raf.app.repositories.UserRepository;
+import rs.raf.app.repositories.UsersRepository;
 
 @Component
 public class BootstrapData implements CommandLineRunner {
 
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public BootstrapData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public BootstrapData(UsersRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

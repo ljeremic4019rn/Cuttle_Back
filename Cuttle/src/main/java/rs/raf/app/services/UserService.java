@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.User;
-import rs.raf.app.repositories.UserRepository;
+import rs.raf.app.repositories.UsersRepository;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,10 +21,10 @@ public class UserService implements UserDetailsService {
 
     private PasswordEncoder passwordEncoder;
 
-    private UserRepository userRepository;
+    private UsersRepository userRepository;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, TaskScheduler taskScheduler) {
+    public UserService(PasswordEncoder passwordEncoder, UsersRepository userRepository, TaskScheduler taskScheduler) {
         this.passwordEncoder = passwordEncoder;
 
         this.userRepository = userRepository;

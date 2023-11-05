@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="render setup (plz)">
+      <change afterPath="$PROJECT_DIR$/Cuttle/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e48da961-331f-4a80-b2fc-971108230dcd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e48da961-331f-4a80-b2fc-971108230dcd.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/bootstrap/BootstrapData.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/bootstrap/BootstrapData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/repositories/UsersRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,6 +147,19 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="Cuttle.sleeper: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="sleeper" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="Cuttle/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml" />
       <method v="2" />
@@ -149,6 +167,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Docker.Cuttle.cuttle_back: Compose Deployment" />
+        <item itemvalue="Docker.Cuttle.sleeper: Compose Deployment" />
         <item itemvalue="Docker.Cuttle.dpg-cl3vl3quuipc738nqdhg-a: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -418,7 +437,21 @@
       <option name="project" value="LOCAL" />
       <updated>1699217301428</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="render setup (plz)">
+      <created>1699220051562</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1699220051562</updated>
+    </task>
+    <task id="LOCAL-00033" summary="render setup (plz)">
+      <created>1699220113217</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1699220113217</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

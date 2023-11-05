@@ -14,6 +14,8 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "cuttle_users")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

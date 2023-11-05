@@ -6,7 +6,7 @@ import rs.raf.app.model.User;
 
 import java.util.Optional;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+@Repository()
+public interface UsersRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 }
