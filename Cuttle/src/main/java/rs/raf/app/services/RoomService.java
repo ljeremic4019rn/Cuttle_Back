@@ -76,8 +76,7 @@ public class RoomService {
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new StartGameResponse(new ResponseDto("You are not the room owner", 403), null);
             gameResponse = room.startGame();
-            room.printAll();
-
+//            room.printAll();
             return new StartGameResponse(new ResponseDto(gameResponse.toString(), 200), gameResponse);
         } else return new StartGameResponse(new ResponseDto("Requested room doesn't exist", 404), null);
     }
@@ -91,6 +90,20 @@ public class RoomService {
             room.stopGame();
             return new ResponseDto("Game stopped", 200);
         } else return new ResponseDto("Requested room doesn't exist", 404);
+    }
+
+    public StartGameResponse restartRoom(String roomKey, String commandIssuingUser){
+        GameResponse gameResponse;
+        if (activeRooms.containsKey(roomKey)) {
+            Room room = activeRooms.get(roomKey);
+            if (!room.getRoomOwner().equals(commandIssuingUser))
+                return new StartGameResponse(new ResponseDto("You are not the room owner", 403), null);
+            gameResponse = room.restartGame();
+
+            room.printAll();
+
+            return new StartGameResponse(new ResponseDto(gameResponse.toString(), 200), gameResponse);
+        } else return new StartGameResponse(new ResponseDto("Requested room doesn't exist", 404), null);
     }
 
 

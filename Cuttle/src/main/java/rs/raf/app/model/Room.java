@@ -10,7 +10,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Room extends Thread{
+public class Room{
 
     //todo postavi room creation time kako bi se pratila koja je aktiva a koja je smece
     //todo smisli nacin da se sklone igraci ako kliknu back ili ako nisu aktivni (mozda na frontu)
@@ -22,10 +22,10 @@ public class Room extends Thread{
     private String roomOwner;
     private int numOfPlayers;
     private ArrayList<String> players = new ArrayList<>(); // prvi koji udje je owner
+    private int startingPlayer = 0;
     private int currentPlayersTurn = 0;
     private int playerWhoWon = -1;
     private String playerWhoWonName = "";
-
 
     //decks
     private ArrayList<String> setUpDeck = new ArrayList<>();
@@ -39,7 +39,6 @@ public class Room extends Thread{
     private Map<Integer, Integer> playerKings = new HashMap<>(); //number of kinds a player has active
 
     //helper vars
-//    private boolean turnOver;
     Random random = new Random();
     ArrayList <String> cardsToRemove = new ArrayList<>();
     ArrayList <String> cardsForGraveyard = new ArrayList<>();
@@ -53,8 +52,11 @@ public class Room extends Thread{
             playerTables.put(i, new ArrayList<>());
             playerHands.put(i, new ArrayList<>());
         }
+
+        System.out.println(playerHands);
+        System.out.println(playerHands.size());
+
         dealCards();
-//        randomizeStartingPlayer();
         numOfPlayers = players.size();
         gameIsRunning = true;
 
@@ -69,6 +71,24 @@ public class Room extends Thread{
                 ""
         );
         return gameResponse;
+    }
+
+    public GameResponse restartGame(){
+        gameIsRunning = false;
+        playerWhoWon = -1;
+        playerWhoWonName = "";
+        deck = new Stack<>();
+        graveyard = new ArrayList<>();
+        cardsToRemove = new ArrayList<>();
+        cardsForGraveyard = new ArrayList<>();
+        gameResponseType = GameResponseType.REGULAR_GO_NEXT;
+        Collections.shuffle(setUpDeck);
+
+        startingPlayer++;
+        if (startingPlayer >= numOfPlayers) startingPlayer = 0;
+        currentPlayersTurn = startingPlayer;
+
+        return startGame();
     }
 
     /*
@@ -89,7 +109,6 @@ public class Room extends Thread{
 
     public void stopGame() {
         gameIsRunning = false;
-        //todo dodaj da se nesto vrati, ili da se sacuva score na igracu ili nesto
     }
 
     private void dealCards() {

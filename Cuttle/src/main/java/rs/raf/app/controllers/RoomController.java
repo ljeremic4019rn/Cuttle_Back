@@ -76,7 +76,24 @@ public class RoomController {
             RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.START);
             roomUpdateResponse.setGameResponse(startGameResponse.getGameResponse());
             this.simpMessagingTemplate.convertAndSend("/cuttle/updateRoom/" + roomKey, roomUpdateResponse);
-            return ResponseEntity.ok(startGameResponse.getGameResponse());
+            return ResponseEntity.ok(roomUpdateResponse.getGameResponse());
+        }
+    }
+
+    @PostMapping("/restartRoom/{roomKey}")
+    public ResponseEntity<?> restartRoom(@PathVariable String roomKey){
+        Optional<User> user = this.userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user.isEmpty()) return ResponseEntity.status(404).body("You don't have a profile created");
+        StartGameResponse restartGameResponse = roomService.restartRoom(roomKey, user.get().getUsername());
+
+        if (restartGameResponse.getGameResponse() == null){
+            return ResponseEntity.status(restartGameResponse.getResponseDto().getResponseCode()).body(restartGameResponse.getResponseDto().getResponse());
+        }
+        else {
+            RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.RESTART);//todo look into this
+            roomUpdateResponse.setGameResponse(restartGameResponse.getGameResponse());
+            this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + roomKey, roomUpdateResponse);
+            return ResponseEntity.ok(restartGameResponse.getGameResponse());
         }
     }
 
