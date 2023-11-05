@@ -88,13 +88,9 @@ public class RoomService {
             if (!room.isGameIsRunning()) return new ResponseDto("Game is already finished", 401);
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new ResponseDto("You are not the room owner", 403);
-
             room.stopGame();
-            //todo delete room
             return new ResponseDto("Game stopped", 200);
         } else return new ResponseDto("Requested room doesn't exist", 404);
-
-        //todo ubi sockete koji su aktivni mozda?
     }
 
 
@@ -103,9 +99,8 @@ public class RoomService {
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
             Room room = activeRooms.get(gameAction.getRoomKey());
             gameResponse = room.playTurn(gameAction);
-
-            System.out.println(gameAction.getActionType());//todo obrisi na kraju
-            room.printAll();
+//            System.out.println(gameAction.getActionType());
+//            room.printAll();
         }
         else {
             System.err.println("Room not found");
@@ -122,10 +117,8 @@ public class RoomService {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
             gameResponse = room.drawCard();
-
-            System.out.println("DRAW");//todo obrisi na kraju
-            room.printAll();
-
+//            System.out.println("DRAW");
+//            room.printAll();
             return gameResponse;
         }
         else {

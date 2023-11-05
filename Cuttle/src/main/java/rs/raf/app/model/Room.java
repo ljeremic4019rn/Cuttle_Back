@@ -39,7 +39,7 @@ public class Room extends Thread{
     private Map<Integer, Integer> playerKings = new HashMap<>(); //number of kinds a player has active
 
     //helper vars
-    private boolean turnOver;
+//    private boolean turnOver;
     Random random = new Random();
     ArrayList <String> cardsToRemove = new ArrayList<>();
     ArrayList <String> cardsForGraveyard = new ArrayList<>();
@@ -112,40 +112,36 @@ public class Room extends Thread{
         gameResponseType = GameResponseType.REGULAR_GO_NEXT;
 
         switch (gameAction.getActionType()) {
-            case NUMBER -> turnOver = playNumberCard(gameAction);
-            case SCUTTLE -> turnOver = playScuttleCard(gameAction);
+            case NUMBER -> playNumberCard(gameAction);
+            case SCUTTLE -> playScuttleCard(gameAction);
             case SKIP -> {}
             //(for cards drawn by 7 and not played are discarded)  we place a card we want to discard into played for convenience
             case DISCARD_CARD -> discardSelectedCardFromPlayerHand(gameAction.getCardPlayed(), currentPlayersTurn);
-            case COUNTER -> turnOver = counterCardPlayed(gameAction);
+            case COUNTER -> counterCardPlayed(gameAction);
             case POWER -> {
-
                 if ( !(gameAction.getCardPlayed().split("_")[0].equals("4")) && gameAction.getHelperCardList().size() != 0) {
                     clearHelperCardList(gameAction.getHelperCardList());
                 }
 
                 switch (gameAction.getCardPlayed().split("_")[0]) {
-                    case "1" -> turnOver = play1power(gameAction);
-                    case "2" -> turnOver = play2power(gameAction);
-                    case "3" -> turnOver = play3power(gameAction);
-                    case "4" -> turnOver = play4power(gameAction);
-                    case "5" -> turnOver = play5power(gameAction);
-                    case "6" -> turnOver = play6power(gameAction);
+                    case "1" -> play1power(gameAction);
+                    case "2" -> play2power(gameAction);
+                    case "3" -> play3power(gameAction);
+                    case "4" -> play4power(gameAction);
+                    case "5" -> play5power(gameAction);
+                    case "6" -> play6power(gameAction);
                     case "7" -> {
-                        turnOver = play7power(gameAction);
+                        play7power(gameAction);
                         gameResponseType = GameResponseType.SEVEN;
                     }
-                    case "8" -> turnOver = play8power(gameAction);
-                    case "9" -> turnOver = play9power(gameAction);
-                    case "J" -> turnOver = playJackPower(gameAction);
-                    case "Q" -> turnOver = playQueenPower(gameAction);
-                    case "K" -> turnOver = playKingPower(gameAction);
+                    case "8" -> play8power(gameAction);
+                    case "9" -> play9power(gameAction);
+                    case "J" -> playJackPower(gameAction);
+                    case "Q" -> playQueenPower(gameAction);
+                    case "K" -> playKingPower(gameAction);
                 }
             }
         }
-
-        //todo mozda skloni ovaj boolean samo za provere
-        if (!turnOver) System.err.println("PROBLEM SE DESIO NADJI ");
 
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
@@ -192,7 +188,7 @@ public class Room extends Thread{
 
     - also if a 2 is countered by another 2 it will be handled front side aka if 2Played var is filled it will just empty it (action passes), therefor countering a 2 with 2
      */
-    private boolean counterCardPlayed(GameAction gameAction){//this happens when the base card was countered and there is 1 or 3 counter cards to sent to graveyard
+    private void counterCardPlayed(GameAction gameAction){//this happens when the base card was countered and there is 1 or 3 counter cards to sent to graveyard
         String []split2Card;
         String whole2Card;
         //send the countered card to graveyard
@@ -208,7 +204,7 @@ public class Room extends Thread{
             graveyard.add(whole2Card);
         }
 
-        return true;
+
     }
 
     //this happens (every turn) when card is double countered aka somebody countered a counter
@@ -254,13 +250,12 @@ public class Room extends Thread{
         return -1;
     }
 
-    private boolean playNumberCard(GameAction gameAction) {
+    private void playNumberCard(GameAction gameAction) {
         //we take the number of the card
         int playedCardPower = Integer.parseInt(gameAction.getCardPlayed().split("_")[0]);
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
         playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn)  + playedCardPower);
-        return true;
     }
 
     /*
@@ -268,7 +263,7 @@ public class Room extends Thread{
                             0  1    0 1  2   3  4    0 1  2   3 4  5   6  7
     cards you can scuttle = 10_S || J_S_<id>_10_S || J_S_<id>_J_H_<id>_10_S
     */
-    private boolean playScuttleCard(GameAction gameAction) {
+    private void playScuttleCard(GameAction gameAction) {
         String[] playedCardSplit = gameAction.getCardPlayed().split("_");
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
@@ -309,7 +304,6 @@ public class Room extends Thread{
             graveyard.add(scuttledCardForGraveyard);//add scuttled to graveyard
             playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
             if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);//if was jacked send jacks to graveyard
-            return true;
         }
         //if card numbs are same but played suit is bigger scuttle
         else if (playedCardRank == playedOntoCardRank) {
@@ -320,14 +314,11 @@ public class Room extends Thread{
                 graveyard.add(scuttledCardForGraveyard);
                 playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
                 if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);
-                return true;
             }
         }
-        //dont do anything, bad turn (should not get here ever)
-        return false;
     }
 
-    private boolean play1power(GameAction gameAction) {
+    private void play1power(GameAction gameAction) {
         //go through all player tables
         playerTables.forEach((playerId, cardsOnTableList) -> {
             cardsToRemove.clear();
@@ -366,11 +357,9 @@ public class Room extends Thread{
         //send 1 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-
-        return true;
     }
 
-    private boolean play2power(GameAction gameAction) {
+    private void play2power(GameAction gameAction) {
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
         //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
@@ -420,20 +409,18 @@ public class Room extends Thread{
                 playerKings.put(gameAction.getOntoPlayer(), playerKings.get(gameAction.getOntoPlayer()) - 1);//remove one king on king tracker map
             }
             //1_S...
-            default -> {
-                return false;
-            }
+            default -> {}
         }
 
         //send 2 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
 
-        return true;
+
     }
 
     //here the ontoPlayedCard is referred to the graveyard card and not a card on the table
-    private boolean play3power(GameAction gameAction) {
+    private void play3power(GameAction gameAction) {
         //return card from graveyard to us
         graveyard.remove(gameAction.getOntoCardPlayed());
         playerHands.get(currentPlayersTurn).add(gameAction.getOntoCardPlayed());
@@ -441,16 +428,13 @@ public class Room extends Thread{
         //send 3 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-        return true;
     }
 
-    private boolean play4power(GameAction gameAction) {
+    private void play4power(GameAction gameAction) {
         int playerHandSize = playerHands.get(gameAction.getOntoPlayer()).size();
 
-        //if 0 nothing to discard
-        if (playerHandSize == 0) return true;
-            //if one remove that single one and add to graveyard
-        else if (playerHandSize == 1) {
+        //if one remove that single one and add to graveyard
+        if (playerHandSize == 1) {
             discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
         }
         //remove 2 at random and add to graveyard
@@ -469,22 +453,18 @@ public class Room extends Thread{
         //send 4 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-
-        return true;
     }
 
-    private boolean play5power(GameAction gameAction) {
+    private void play5power(GameAction gameAction) {
         playerHands.get(currentPlayersTurn).add(deck.pop());
         playerHands.get(currentPlayersTurn).add(deck.pop());
 
         //send 5 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-
-        return true;
     }
 
-    private boolean play6power(GameAction gameAction) {
+    private void play6power(GameAction gameAction) {
         Map<Integer, String> cardsToGiveBackToOgPlayers = new HashMap<>();
 
         //go through all player tables
@@ -545,7 +525,7 @@ public class Room extends Thread{
                     }
                 }
             }
-            graveyard.addAll(cardsForGraveyard);//todo testiraj
+            graveyard.addAll(cardsForGraveyard);
             playerTable.getValue().removeAll(cardsToRemove);
         }
 
@@ -557,33 +537,26 @@ public class Room extends Thread{
         //send 6 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-
-        return true;
     }
 
-    //todo postavi discard funkciju koja ce da stavi kartu na groblje
-    //todo stavi skip turn dugme da ne morada se ceka 60 sec ako ne moze da se odigra karta
-    private boolean play7power(GameAction gameAction) {
+    private void play7power(GameAction gameAction) {
         //send 7 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
 
-        //todo provera dal je ova karta bacena ce biti na FRONTU, ako se baci isprazni, ako se ne baci discarduj
         //draw card to play next
         playerHands.get(currentPlayersTurn).add(deck.pop());
-        currentPlayersTurn-= 1;//todo proveri ovo
-        return true;
+        currentPlayersTurn-= 1;
     }
 
     //when 8 power is played on table will be P_<rank>_<suit> - P_8_C
-    private boolean play8power(GameAction gameAction) {
+    private void play8power(GameAction gameAction) {
         //remove 8 from hand
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add("P_" + gameAction.getCardPlayed());
-        return true;
     }
 
-    private boolean play9power(GameAction gameAction) {
+    private void play9power(GameAction gameAction) {
         String[] ontoPlayedCardSplit = gameAction.getOntoCardPlayed().split("_");
 
         //0 1  2   3 4     0 1  2   3 4  5   6 7  8   9  10...
@@ -591,7 +564,6 @@ public class Room extends Thread{
         switch (ontoPlayedCardSplit[0]) {
             case "J" -> {
                 String topJackCard = ontoPlayedCardSplit[0] + "_" + ontoPlayedCardSplit[1];
-                int playerToReturnJackedTo = Integer.parseInt(ontoPlayedCardSplit[2]);
                 String cardToReturn = "";
                 int playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[2]);
 
@@ -633,26 +605,20 @@ public class Room extends Thread{
                 playerKings.put(gameAction.getOntoPlayer(), playerKings.get(gameAction.getOntoPlayer()) - 1);//remove one king to king tracker map
             }
             //1_S...
-            default -> {
-                return false;
-            }
+            default -> {}
         }
 
         //send 9 to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
-
-        return true;
     }
 
-    private boolean playJackPower(GameAction gameAction) {
+    private void playJackPower(GameAction gameAction) {
         ArrayList<String> stealFromPlayerTable = playerTables.get(gameAction.getOntoPlayer());
 
         //if queen on table, need to remove it first to play jack on point card
         if (stealFromPlayerTable.contains("Q_C") || stealFromPlayerTable.contains("Q_H") || stealFromPlayerTable.contains("Q_D") || stealFromPlayerTable.contains("Q_S")) {
             System.err.println("There is a queen on the table");
-            //TODO MOZDA DA SE STAVI CURRENT PLYAER - 1
-            return false;
         }
         //else steal the cards to me
         else {
@@ -668,20 +634,17 @@ public class Room extends Thread{
             playerScore.put(gameAction.getFromPlayer(), playerScore.get(gameAction.getFromPlayer()) + pointsToExchange);
             playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - pointsToExchange);
         }
-        return true;
     }
 
-    private boolean playQueenPower(GameAction gameAction) {
+    private void playQueenPower(GameAction gameAction) {
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
-        return true;
     }
 
-    private boolean playKingPower(GameAction gameAction) {
+    private void playKingPower(GameAction gameAction) {
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
         playerKings.put(currentPlayersTurn, playerKings.get(currentPlayersTurn) + 1);//add one king to king tracker map
-        return true;
     }
 
 
