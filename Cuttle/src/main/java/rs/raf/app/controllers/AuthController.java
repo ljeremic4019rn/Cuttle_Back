@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import rs.raf.app.model.User;
 import rs.raf.app.requests.AuthRequest;
 import rs.raf.app.responses.LoginResponse;
-import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.services.UserService;
 import rs.raf.app.utils.JwtUtil;
-
-import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -29,10 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        } catch (Exception   e){
+        } catch (Exception e) {
 //            e.printStackTrace();
             return ResponseEntity.status(401).build();
         }
@@ -40,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody AuthRequest authRequest){
+    public ResponseEntity<?> signup(@RequestBody AuthRequest authRequest) {
         if (userService.findByUsername(authRequest.getUsername()).isPresent()) {
             return ResponseEntity.status(400).body("User with that username already exists");
         }

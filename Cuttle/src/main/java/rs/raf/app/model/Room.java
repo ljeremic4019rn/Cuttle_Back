@@ -2,7 +2,8 @@ package rs.raf.app.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import rs.raf.app.model.actions.*;
+import rs.raf.app.model.actions.GameAction;
+import rs.raf.app.model.actions.GameResponse;
 import rs.raf.app.model.actions.enums.CardComparison;
 import rs.raf.app.model.actions.enums.GameResponseType;
 
@@ -10,7 +11,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Room{
+public class Room {
 
 
     //room vars
@@ -38,8 +39,8 @@ public class Room{
 
     //helper vars
     private Random random = new Random();
-    private ArrayList <String> cardsToRemove = new ArrayList<>();
-    private ArrayList <String> cardsForGraveyard = new ArrayList<>();
+    private ArrayList<String> cardsToRemove = new ArrayList<>();
+    private ArrayList<String> cardsForGraveyard = new ArrayList<>();
     private GameResponseType gameResponseType = GameResponseType.REGULAR_GO_NEXT;
     private Long roomLastUpdated = 0L;
 
@@ -72,7 +73,7 @@ public class Room{
         return gameResponse;
     }
 
-    public GameResponse restartGame(){
+    public GameResponse restartGame() {
         gameIsRunning = false;
         playerWhoWon = -1;
         playerWhoWonName = "";
@@ -132,12 +133,13 @@ public class Room{
         switch (gameAction.getActionType()) {
             case NUMBER -> playNumberCard(gameAction);
             case SCUTTLE -> playScuttleCard(gameAction);
-            case SKIP -> {}
+            case SKIP -> {
+            }
             //(for cards drawn by 7 and not played are discarded)  we place a card we want to discard into played for convenience
             case DISCARD_CARD -> discardSelectedCardFromPlayerHand(gameAction.getCardPlayed(), currentPlayersTurn);
             case COUNTER -> counterCardPlayed(gameAction);
             case POWER -> {
-                if ( !(gameAction.getCardPlayed().split("_")[0].equals("4")) && gameAction.getHelperCardList().size() != 0) {
+                if (!(gameAction.getCardPlayed().split("_")[0].equals("4")) && gameAction.getHelperCardList().size() != 0) {
                     clearHelperCardList(gameAction.getHelperCardList());
                 }
 
@@ -162,7 +164,7 @@ public class Room{
         }
 
         playerWhoWon = checkIfSomebodyWon();
-        if (playerWhoWon != -1){
+        if (playerWhoWon != -1) {
             gameResponseType = GameResponseType.GAME_OVER_WON;
             playerWhoWonName = players.get(playerWhoWon);
         }
@@ -205,15 +207,15 @@ public class Room{
 
     - also if a 2 is countered by another 2 it will be handled front side aka if 2Played var is filled it will just empty it (action passes), therefor countering a 2 with 2
      */
-    private void counterCardPlayed(GameAction gameAction){//this happens when the base card was countered and there is 1 or 3 counter cards to sent to graveyard
-        String []split2Card;
+    private void counterCardPlayed(GameAction gameAction) {//this happens when the base card was countered and there is 1 or 3 counter cards to sent to graveyard
+        String[] split2Card;
         String whole2Card;
         //send the countered card to graveyard
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         graveyard.add(gameAction.getCardPlayed());
 
         //send all 2s used to graveyard
-        for (String twoCard: gameAction.getHelperCardList()) {
+        for (String twoCard : gameAction.getHelperCardList()) {
             split2Card = twoCard.split("_");
             whole2Card = split2Card[0] + "_" + split2Card[1];
 
@@ -226,12 +228,12 @@ public class Room{
 
     //this happens (every turn) when card is double countered aka somebody countered a counter
     //so the card goes through but the counter cards need to be sent to graveyard
-    private void clearHelperCardList(List<String> helperCardList){//<rank>_<suit>_<playerId> 2_S_3
-        String []splitCard;
+    private void clearHelperCardList(List<String> helperCardList) {//<rank>_<suit>_<playerId> 2_S_3
+        String[] splitCard;
         String wholeCard;
 
         //send all 2s used to graveyard
-        for (String card: helperCardList) {
+        for (String card : helperCardList) {
             splitCard = card.split("_");
             wholeCard = splitCard[0] + "_" + splitCard[1];
             playerHands.get(Integer.parseInt(splitCard[2])).remove(wholeCard);//remove 2 from players hand
@@ -239,14 +241,14 @@ public class Room{
         }
     }
 
-    private int checkIfSomebodyWon(){
+    private int checkIfSomebodyWon() {
         for (Map.Entry<Integer, Integer> entry : playerScore.entrySet()) {
             int playerId = entry.getKey();
             int numberOfKings = playerKings.get(playerId);
 
             int score = entry.getValue();
 
-            switch (numberOfKings){
+            switch (numberOfKings) {
                 case 0 -> {
                     if (score >= 21) return playerId;
                 }
@@ -272,7 +274,7 @@ public class Room{
         int playedCardPower = Integer.parseInt(gameAction.getCardPlayed().split("_")[0]);
         playerHands.get(currentPlayersTurn).remove(gameAction.getCardPlayed());
         playerTables.get(currentPlayersTurn).add(gameAction.getCardPlayed());
-        playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn)  + playedCardPower);
+        playerScore.put(currentPlayersTurn, playerScore.get(currentPlayersTurn) + playedCardPower);
     }
 
     /*
@@ -286,7 +288,7 @@ public class Room{
 
         int playedCardRank = Integer.parseInt(playedCardSplit[0]);
         int playedOntoCardRank;
-        String scuttledCardForGraveyard ;
+        String scuttledCardForGraveyard;
 
         ArrayList<String> jacksToSendToGraveyard = new ArrayList<>();
         boolean cardWasJacked = false;
@@ -307,8 +309,7 @@ public class Room{
                 jacksToSendToGraveyard.add(card);
                 positionCounter = positionCounter + 3;
             }
-        }
-        else {
+        } else {
             playedOntoCardRank = Integer.parseInt(ontoPlayedCardSplit[0]);
             scuttledCardForGraveyard = gameAction.getOntoCardPlayed();
         }
@@ -351,8 +352,7 @@ public class Room{
                     cardsToRemove.add(card);
                     cardsForGraveyard.add(card);
 //                    graveyard.add(card);
-                }
-                else if (cardSplit[0].equals("J")) {
+                } else if (cardSplit[0].equals("J")) {
                     int jackCounter = 0;
                     String jackCard;
                     String cardToScuttle = cardSplit[cardSplit.length - 2] + "_" + cardSplit[cardSplit.length - 1];//onto card it self
@@ -388,7 +388,7 @@ public class Room{
                 int playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[2]);
 
                 //if split[3] == J -> there is another Jack on top, return to that players table based on the next <id>
-                    //we have to build back the card with the Js still on it
+                //we have to build back the card with the Js still on it
                 //else if split[3] == num -> return the point card to the og players table
                 if (ontoPlayedCardSplit[3].equals("J")) {
                     for (int i = 3; i < ontoPlayedCardSplit.length; i++) {
@@ -396,8 +396,7 @@ public class Room{
                         if (i < ontoPlayedCardSplit.length - 1)
                             cardToReturn = cardToReturn + "_";
                     }
-                }
-                else {
+                } else {
                     cardToReturn = ontoPlayedCardSplit[3] + "_" + ontoPlayedCardSplit[4];
                 }
 
@@ -415,7 +414,7 @@ public class Room{
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
                 graveyard.add(gameAction.getOntoCardPlayed());//send 2ed card to graveyard
             }
-            case "P" ->{
+            case "P" -> {
                 String card8withoutP = ontoPlayedCardSplit[1] + "_" + ontoPlayedCardSplit[2];
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove 9ed card from table
                 graveyard.add(card8withoutP);//return 9ed card to hand
@@ -426,7 +425,8 @@ public class Room{
                 playerKings.put(gameAction.getOntoPlayer(), playerKings.get(gameAction.getOntoPlayer()) - 1);//remove one king on king tracker map
             }
             //1_S...
-            default -> {}
+            default -> {
+            }
         }
 
         //send 2 to graveyard
@@ -457,11 +457,10 @@ public class Room{
         //remove 2 at random and add to graveyard
         else {
             //if two cards are selected by enemy player on front end, discard them
-            if (gameAction.getHelperCardList().size() == 2){
+            if (gameAction.getHelperCardList().size() == 2) {
                 discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(0), gameAction.getOntoPlayer());
                 discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(1), gameAction.getOntoPlayer());
-            }
-            else {//if player didn't select two cards, discard 2 at random
+            } else {//if player didn't select two cards, discard 2 at random
                 discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
                 discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
             }
@@ -535,7 +534,7 @@ public class Room{
                         cardsToGiveBackToOgPlayers.put(ogOwnerId, cardToGiveBack);
 
                         //exchange points
-                        String []cardToGiveBackSplit = cardToGiveBack.split("_");
+                        String[] cardToGiveBackSplit = cardToGiveBack.split("_");
                         int pointsToExchange = Integer.parseInt(cardToGiveBackSplit[0]);//get points to exchange
                         playerScore.put(ogOwnerId, playerScore.get(ogOwnerId) + pointsToExchange);
                         playerScore.put(playerTable.getKey(), playerScore.get(playerTable.getKey()) - pointsToExchange);
@@ -563,7 +562,7 @@ public class Room{
 
         //draw card to play next
         playerHands.get(currentPlayersTurn).add(deck.pop());
-        currentPlayersTurn-= 1;
+        currentPlayersTurn -= 1;
     }
 
     //when 8 power is played on table will be P_<rank>_<suit> - P_8_C
@@ -585,7 +584,7 @@ public class Room{
                 int playerToReturnCardTo = Integer.parseInt(ontoPlayedCardSplit[2]);
 
                 //if split[3] == J -> there is another Jack on top, return to that players table based on the next <id>
-                    //we have to build back the card with the Js still on it
+                //we have to build back the card with the Js still on it
                 //else if split[3] == num -> return the point card to the og players table
                 if (ontoPlayedCardSplit[3].equals("J")) {
                     for (int i = 3; i < ontoPlayedCardSplit.length; i++) {
@@ -593,8 +592,7 @@ public class Room{
                         if (i < ontoPlayedCardSplit.length - 1)
                             cardToReturn = cardToReturn + "_";
                     }
-                }
-                else {
+                } else {
                     cardToReturn = ontoPlayedCardSplit[3] + "_" + ontoPlayedCardSplit[4];
                 }
 
@@ -622,7 +620,8 @@ public class Room{
                 playerKings.put(gameAction.getOntoPlayer(), playerKings.get(gameAction.getOntoPlayer()) - 1);//remove one king to king tracker map
             }
             //1_S...
-            default -> {}
+            default -> {
+            }
         }
 
         //send 9 to graveyard
@@ -697,24 +696,24 @@ public class Room{
     }
 
 
-    private void discardRandomCardFromPlayerHand(ArrayList<String> handToDiscardCardFrom){
+    private void discardRandomCardFromPlayerHand(ArrayList<String> handToDiscardCardFrom) {
         int playerHandSize = handToDiscardCardFrom.size();
         int randomCardIndex = random.nextInt(playerHandSize);
         graveyard.add(handToDiscardCardFrom.get(randomCardIndex));
         handToDiscardCardFrom.remove(randomCardIndex);
     }
 
-    private void discardSelectedCardFromPlayerHand(String cardToDiscard, int playerId){
+    private void discardSelectedCardFromPlayerHand(String cardToDiscard, int playerId) {
         playerHands.get(playerId).remove(cardToDiscard);
         graveyard.add(cardToDiscard);
     }
 
-    private void swapTurnToNextPlayer(){
+    private void swapTurnToNextPlayer() {
         currentPlayersTurn += 1;
         if (currentPlayersTurn == numOfPlayers) currentPlayersTurn = 0;
     }
 
-    public void printAll(){
+    public void printAll() {
         System.out.println("Current players turn = " + currentPlayersTurn);
 
         System.out.println("Deck:");
@@ -754,13 +753,14 @@ public class Room{
         graveyard.forEach(value -> {
             System.out.print(value + ", ");
         });
-        System.out.print("\n");    }
+        System.out.print("\n");
+    }
 
-    private void printPlayScore(){
+    private void printPlayScore() {
         System.out.println(playerScore.toString());
     }
 
-    private void printKings(){
+    private void printKings() {
         playerKings.forEach((key, value) -> {
             System.out.println("player " + key + " = {" + value + "}");
         });

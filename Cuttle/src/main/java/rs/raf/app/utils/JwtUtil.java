@@ -22,11 +22,11 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    public boolean isTokenExpired(String token){
+    public boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    public String generateToken(String username){
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)

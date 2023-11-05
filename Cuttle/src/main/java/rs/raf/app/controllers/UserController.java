@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.app.model.User;
-import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.services.UserService;
 
-import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController

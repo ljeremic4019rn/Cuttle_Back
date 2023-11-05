@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.Room;
-import rs.raf.app.model.actions.*;
+import rs.raf.app.model.actions.GameAction;
+import rs.raf.app.model.actions.GameResponse;
+import rs.raf.app.model.actions.StartGameResponse;
 import rs.raf.app.responses.JoinRoomResponse;
 import rs.raf.app.responses.ResponseDto;
 import rs.raf.app.utils.RoomKeyGenerator;
@@ -59,8 +61,7 @@ public class RoomService {
                 return new ResponseDto("Error while joining room", 500);
             }
             return new ResponseDto(userJsonBody, 200);
-        }
-        else return new ResponseDto("Requested room doesn't exist", 404);
+        } else return new ResponseDto("Requested room doesn't exist", 404);
     }
 
 
@@ -68,7 +69,8 @@ public class RoomService {
         GameResponse gameResponse;
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
-            if (room.isGameIsRunning()) return new StartGameResponse(new ResponseDto("Game already in progress", 401), null);
+            if (room.isGameIsRunning())
+                return new StartGameResponse(new ResponseDto("Game already in progress", 401), null);
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new StartGameResponse(new ResponseDto("You are not the room owner", 403), null);
             gameResponse = room.startGame();
@@ -88,7 +90,7 @@ public class RoomService {
         } else return new ResponseDto("Requested room doesn't exist", 404);
     }
 
-    public StartGameResponse restartRoom(String roomKey, String commandIssuingUser){
+    public StartGameResponse restartRoom(String roomKey, String commandIssuingUser) {
         GameResponse gameResponse;
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
@@ -107,8 +109,7 @@ public class RoomService {
             Room room = activeRooms.get(gameAction.getRoomKey());
             gameResponse = room.playTurn(gameAction);
             room.setRoomLastUpdated(System.currentTimeMillis());
-        }
-        else {
+        } else {
             System.err.println("Room not found");
             System.err.println(activeRooms);
         }
@@ -125,18 +126,16 @@ public class RoomService {
             gameResponse = room.drawCard();
             room.setRoomLastUpdated(System.currentTimeMillis());
             return gameResponse;
-        }
-        else {
+        } else {
             System.err.println("Room not found");
             return null;
         }
     }
 
-    public ArrayList<String> getRoomPlayers(String roomKey){
+    public ArrayList<String> getRoomPlayers(String roomKey) {
         if (activeRooms.containsKey(roomKey)) {
             return activeRooms.get(roomKey).getPlayers();
-        }
-        else {
+        } else {
             System.err.println("Room not found");
             return null;
         }

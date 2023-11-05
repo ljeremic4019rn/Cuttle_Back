@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.raf.app.model.User;
 import rs.raf.app.repositories.UserRepository;
-import rs.raf.app.responses.ResponseDto;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> myUser = this.findByUsername(username);
-        if(!myUser.isPresent()) {
+        if (!myUser.isPresent()) {
             throw new UsernameNotFoundException("User name <" + username + "> not found");
         }
 

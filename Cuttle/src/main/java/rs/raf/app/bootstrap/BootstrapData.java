@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import rs.raf.app.model.*;
-import rs.raf.app.repositories.*;
+import rs.raf.app.model.User;
+import rs.raf.app.repositories.UserRepository;
 
 @Component
 public class BootstrapData implements CommandLineRunner {
