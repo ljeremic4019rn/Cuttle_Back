@@ -109,7 +109,7 @@ public class RoomController {
     }
 
     @MessageMapping("/playAction")
-    public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor) {
+    public ResponseEntity<?> doAction(@Payload GameAction gameAction) {
         if (gameAction.getActionType() == ActionType.DRAW) {
             this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.drawCard(gameAction.getRoomKey()));
         } else {
