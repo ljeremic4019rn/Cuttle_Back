@@ -46,10 +46,6 @@ public class Room extends Thread{
     GameResponseType gameResponseType = GameResponseType.REGULAR_GO_NEXT;
 
 
-//    int playerWithActive7Card;
-//    String cardDrawnWith7Card;
-
-
     public GameResponse startGame() {
         for (int i = 0; i < players.size(); i++) {
             playerScore.put(i, 0);
@@ -108,21 +104,12 @@ public class Room extends Thread{
                 cardsInHandList.add(deck.pop());
             }
         });
-        playerHands.get(currentPlayersTurn).add(deck.pop());//todo trenutno owner ima 1 vise jer pocinje
+        playerHands.get(currentPlayersTurn).add(deck.pop());
     }
-
-    //first player has 1 extra card
-//    private void randomizeStartingPlayer(){
-//        int firstPlayer = random.nextInt(players.size()) - 1;
-//        currentPlayersTurn = firstPlayer;
-//        playerHands.get(firstPlayer).add(deck.pop());
-//    }
 
 
     public GameResponse playTurn(GameAction gameAction) {
         gameResponseType = GameResponseType.REGULAR_GO_NEXT;
-
-        //todo wait za uskok 2 ce se uraditi na frontu
 
         switch (gameAction.getActionType()) {
             case NUMBER -> turnOver = playNumberCard(gameAction);

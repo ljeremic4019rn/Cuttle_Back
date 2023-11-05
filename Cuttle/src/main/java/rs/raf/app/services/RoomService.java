@@ -18,7 +18,6 @@ import java.util.Map;
 @Service
 public class RoomService {
 
-    //todo namesti da igraci biraju player size kada pokrenu sobu
     private static final int MAX_NUMBER_OF_PLAYERS = 4;
     private final Map<String, Room> activeRooms = new HashMap<>();
     ObjectMapper mapper = new ObjectMapper();
@@ -42,12 +41,10 @@ public class RoomService {
         room.setIdKey(roomKey);
         room.setRoomOwner(owner_username);
         room.getPlayers().add(owner_username);
-//        room.getPlayerHands().put(1, new ArrayList<>());
         activeRooms.put(roomKey, room);
         return roomKey;
     }
 
-    //todo proveri checkove
     public ResponseDto joinRoom(String roomKey, String username) {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
@@ -65,8 +62,6 @@ public class RoomService {
             } catch (JsonProcessingException e) {
                 return new ResponseDto("Error while joining room", 500);
             }
-
-//            return new ResponseDto("Successfully joined your room -" + username + "-, your number is -" + (room.getPlayers().size() - 1) + "-", 200);
             return new ResponseDto(userJsonBody, 200);
         }
         else return new ResponseDto("Requested room doesn't exist", 404);
@@ -87,7 +82,6 @@ public class RoomService {
         } else return new StartGameResponse(new ResponseDto("Requested room doesn't exist", 404), null);
     }
 
-    //todo smisli sta da se na kraju uradi
     public ResponseDto stopGame(String roomKey, String commandIssuingUser) {
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
@@ -103,7 +97,7 @@ public class RoomService {
         //todo ubi sockete koji su aktivni mozda?
     }
 
-    //todo mozda da se stavi check da samo current player moze da igra, ali mozda je lakse na frontu to
+
     public GameResponse playCard(GameAction gameAction) {
         GameResponse gameResponse = null;
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
@@ -112,9 +106,9 @@ public class RoomService {
 
             System.out.println(gameAction.getActionType());//todo obrisi na kraju
             room.printAll();
-
-        } else {
-            System.err.println("ne postojeca soba?");
+        }
+        else {
+            System.err.println("Room not found");
             System.err.println(activeRooms);
         }
 
@@ -133,8 +127,9 @@ public class RoomService {
             room.printAll();
 
             return gameResponse;
-        } else {
-            System.err.println("NESTO JE MNOGO LOSE");
+        }
+        else {
+            System.err.println("Room not found");
             return null;
         }
     }
@@ -144,7 +139,7 @@ public class RoomService {
             return activeRooms.get(roomKey).getPlayers();
         }
         else {
-            System.err.println("NESTO JE MNOGO LOSE");
+            System.err.println("Room not found");
             return null;
         }
     }

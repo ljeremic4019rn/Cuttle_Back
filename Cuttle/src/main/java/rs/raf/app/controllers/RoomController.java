@@ -90,18 +90,12 @@ public class RoomController {
 
     @MessageMapping("/visualUpdate")
     public ResponseEntity<?> visualRoomUpdate(@Payload VisualUpdate visualUpdate){
-        System.out.println("THIS IS A VISUAL UPDATE");
-
         this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + visualUpdate.getRoomKey(), visualUpdate);
         return ResponseEntity.ok("Socket updated");
     }
 
     @MessageMapping("/playAction")
     public ResponseEntity<?> doAction(@Payload GameAction gameAction, StompHeaderAccessor stompHeaderAccessor){
-        //todo skloni print
-        System.out.println(stompHeaderAccessor.getUser().getName());
-        System.out.println(gameAction);
-
         if (gameAction.getActionType() == ActionType.DRAW) {
             this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + gameAction.getRoomKey(), roomService.drawCard(gameAction.getRoomKey()));
         }
@@ -110,19 +104,5 @@ public class RoomController {
         }
         return ResponseEntity.ok("Socket updated");
     }
-
-//    @Deprecated
-//    @PostMapping("/test")
-//    public ResponseEntity<?> test(@RequestBody GameAction gameAction){
-//        System.out.println("Playing");
-//
-//        if (gameAction.getActionType() == ActionType.DRAW) {
-//            return  ResponseEntity.ok(roomService.drawCard(gameAction.getRoomKey()));
-//        }
-//        else {
-//            return ResponseEntity.ok(roomService.playCard(gameAction));
-//        }
-////        return ResponseEntity.ok("Socket updated");
-//    }
 
 }
