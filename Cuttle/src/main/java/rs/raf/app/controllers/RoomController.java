@@ -90,7 +90,7 @@ public class RoomController {
             return ResponseEntity.status(restartGameResponse.getResponseDto().getResponseCode()).body(restartGameResponse.getResponseDto().getResponse());
         }
         else {
-            RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.RESTART);//todo look into this
+            RoomUpdateResponse roomUpdateResponse = new RoomUpdateResponse(RoomUpdateType.RESTART);
             roomUpdateResponse.setGameResponse(restartGameResponse.getGameResponse());
             this.simpMessagingTemplate.convertAndSend("/cuttle/update/" + roomKey, roomUpdateResponse);
             return ResponseEntity.ok(restartGameResponse.getGameResponse());

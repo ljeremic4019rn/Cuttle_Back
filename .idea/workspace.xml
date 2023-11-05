@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="deleted all helper booleans (for testing)">
+    <list default="true" id="aa5b3777-3a9c-47d5-926b-cb1f63d6e9f8" name="Changes" comment="added restart game, and cleaned up code">
+      <change afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/OldRoomRemover.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/controllers/RoomController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/model/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateType.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/responses/RoomUpdateType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Cuttle/src/main/java/rs/raf/app/services/RoomService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,35 +55,35 @@
     <option name="autoscrollFromSource" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Shus/Programming/IdeaProjects/Year_4/NWP_domaci1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.29919446&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;f795821130107e6435252c30c5591a62&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Shus/Programming/IdeaProjects/Year_4/Kids_domaci_1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.29919446",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "spring.configuration.checksum": "f795821130107e6435252c30c5591a62",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -341,7 +341,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699189477923</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="added restart game, and cleaned up code">
+      <created>1699205018132</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1699205018132</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -362,7 +369,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/demo" />
     </ignored-roots>
-    <MESSAGE value="rade basic sobe" />
     <MESSAGE value="folder name change" />
     <MESSAGE value="pocet rad na game engine, koji obradjuje karte" />
     <MESSAGE value="added a lot of card functions (nothing is tested yet)" />
@@ -387,6 +393,7 @@
     <MESSAGE value="added support for power 4 (clears from helper list now)" />
     <MESSAGE value="removed some todos" />
     <MESSAGE value="deleted all helper booleans (for testing)" />
-    <option name="LAST_COMMIT_MESSAGE" value="deleted all helper booleans (for testing)" />
+    <MESSAGE value="added restart game, and cleaned up code" />
+    <option name="LAST_COMMIT_MESSAGE" value="added restart game, and cleaned up code" />
   </component>
 </project>

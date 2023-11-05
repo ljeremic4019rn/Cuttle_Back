@@ -12,8 +12,6 @@ import java.util.*;
 @Setter
 public class Room{
 
-    //todo postavi room creation time kako bi se pratila koja je aktiva a koja je smece
-    //todo smisli nacin da se sklone igraci ako kliknu back ili ako nisu aktivni (mozda na frontu)
 
     //room vars
     private GameResponse gameResponse;
@@ -39,10 +37,11 @@ public class Room{
     private Map<Integer, Integer> playerKings = new HashMap<>(); //number of kinds a player has active
 
     //helper vars
-    Random random = new Random();
-    ArrayList <String> cardsToRemove = new ArrayList<>();
-    ArrayList <String> cardsForGraveyard = new ArrayList<>();
-    GameResponseType gameResponseType = GameResponseType.REGULAR_GO_NEXT;
+    private Random random = new Random();
+    private ArrayList <String> cardsToRemove = new ArrayList<>();
+    private ArrayList <String> cardsForGraveyard = new ArrayList<>();
+    private GameResponseType gameResponseType = GameResponseType.REGULAR_GO_NEXT;
+    private Long roomLastUpdated = 0L;
 
 
     public GameResponse startGame() {
@@ -164,7 +163,6 @@ public class Room{
 
         playerWhoWon = checkIfSomebodyWon();
         if (playerWhoWon != -1){
-            System.err.println("POBEDIO JE IGRAC " + currentPlayersTurn);//todo skloni
             gameResponseType = GameResponseType.GAME_OVER_WON;
             playerWhoWonName = players.get(playerWhoWon);
         }
@@ -321,7 +319,7 @@ public class Room{
             playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());//remove scuttled card
             graveyard.add(gameAction.getCardPlayed());//add card we are scuttling with to graveyard
             graveyard.add(scuttledCardForGraveyard);//add scuttled to graveyard
-            playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
+            playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth
             if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);//if was jacked send jacks to graveyard
         }
         //if card numbs are same but played suit is bigger scuttle
@@ -331,7 +329,7 @@ public class Room{
                 playerTables.get(gameAction.getOntoPlayer()).remove(gameAction.getOntoCardPlayed());
                 graveyard.add(gameAction.getCardPlayed());
                 graveyard.add(scuttledCardForGraveyard);
-                playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth //todo test
+                playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - playedOntoCardRank);//subtract score for card worth
                 if (cardWasJacked) graveyard.addAll(jacksToSendToGraveyard);
             }
         }
@@ -409,7 +407,7 @@ public class Room{
 
                 //exchange points
                 int pointsToExchange = Integer.parseInt(ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2]);
-                playerScore.put(playerToReturnCardTo, playerScore.get(playerToReturnCardTo) + pointsToExchange);//todo test
+                playerScore.put(playerToReturnCardTo, playerScore.get(playerToReturnCardTo) + pointsToExchange);
                 playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - pointsToExchange);
             }
             //Q_S...
@@ -534,12 +532,12 @@ public class Room{
 
 //                        playerTables.get(ogOwnerId).add(cardToGiveBack);//give back point card to og owner
                         //save which cards to give back to players in the end
-                        cardsToGiveBackToOgPlayers.put(ogOwnerId, cardToGiveBack);//todo ovo je novo, test
+                        cardsToGiveBackToOgPlayers.put(ogOwnerId, cardToGiveBack);
 
                         //exchange points
                         String []cardToGiveBackSplit = cardToGiveBack.split("_");
                         int pointsToExchange = Integer.parseInt(cardToGiveBackSplit[0]);//get points to exchange
-                        playerScore.put(ogOwnerId, playerScore.get(ogOwnerId) + pointsToExchange);//todo test
+                        playerScore.put(ogOwnerId, playerScore.get(ogOwnerId) + pointsToExchange);
                         playerScore.put(playerTable.getKey(), playerScore.get(playerTable.getKey()) - pointsToExchange);
                     }
                 }
@@ -605,7 +603,7 @@ public class Room{
                 playerTables.get(playerToReturnCardTo).add(cardToReturn);
                 //exchange points
                 int pointsToExchange = Integer.parseInt(ontoPlayedCardSplit[ontoPlayedCardSplit.length - 2]);
-                playerScore.put(playerToReturnCardTo, playerScore.get(playerToReturnCardTo) + pointsToExchange);//todo test
+                playerScore.put(playerToReturnCardTo, playerScore.get(playerToReturnCardTo) + pointsToExchange);
                 playerScore.put(gameAction.getOntoPlayer(), playerScore.get(gameAction.getOntoPlayer()) - pointsToExchange);
             }
             //Q_S...

@@ -22,18 +22,13 @@ public class RoomService {
     private final Map<String, Room> activeRooms = new HashMap<>();
     ObjectMapper mapper = new ObjectMapper();
 
+    Thread oldRoomRemover = new OldRoomRemover(activeRooms);
+
     @Autowired
     public RoomService() {
+        oldRoomRemover.setDaemon(true);
+        oldRoomRemover.start();
     }
-
-    //todo napravi da moze da se izadje iz sobe
-
-    //todo napravi "scraper" koji ubija prazne sobe
-    /*
-    imati mapu recently napravljenih soba, npr 2 min
-    ako nakon 5 min nije poceta soba moze da se isprazni ili ubije
-     */
-
 
     public String createRoom(String owner_username) {
         Room room = new Room();
@@ -41,6 +36,7 @@ public class RoomService {
         room.setIdKey(roomKey);
         room.setRoomOwner(owner_username);
         room.getPlayers().add(owner_username);
+        room.setRoomLastUpdated(System.currentTimeMillis());
         activeRooms.put(roomKey, room);
         return roomKey;
     }
@@ -76,7 +72,7 @@ public class RoomService {
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new StartGameResponse(new ResponseDto("You are not the room owner", 403), null);
             gameResponse = room.startGame();
-//            room.printAll();
+            room.setRoomLastUpdated(System.currentTimeMillis());
             return new StartGameResponse(new ResponseDto(gameResponse.toString(), 200), gameResponse);
         } else return new StartGameResponse(new ResponseDto("Requested room doesn't exist", 404), null);
     }
@@ -99,9 +95,7 @@ public class RoomService {
             if (!room.getRoomOwner().equals(commandIssuingUser))
                 return new StartGameResponse(new ResponseDto("You are not the room owner", 403), null);
             gameResponse = room.restartGame();
-
-            room.printAll();
-
+            room.setRoomLastUpdated(System.currentTimeMillis());
             return new StartGameResponse(new ResponseDto(gameResponse.toString(), 200), gameResponse);
         } else return new StartGameResponse(new ResponseDto("Requested room doesn't exist", 404), null);
     }
@@ -112,8 +106,7 @@ public class RoomService {
         if (activeRooms.containsKey(gameAction.getRoomKey())) {
             Room room = activeRooms.get(gameAction.getRoomKey());
             gameResponse = room.playTurn(gameAction);
-//            System.out.println(gameAction.getActionType());
-//            room.printAll();
+            room.setRoomLastUpdated(System.currentTimeMillis());
         }
         else {
             System.err.println("Room not found");
@@ -125,13 +118,12 @@ public class RoomService {
 
 
     public GameResponse drawCard(String roomKey) {
-        GameResponse gameResponse = null;
+        GameResponse gameResponse;
 
         if (activeRooms.containsKey(roomKey)) {
             Room room = activeRooms.get(roomKey);
             gameResponse = room.drawCard();
-//            System.out.println("DRAW");
-//            room.printAll();
+            room.setRoomLastUpdated(System.currentTimeMillis());
             return gameResponse;
         }
         else {
