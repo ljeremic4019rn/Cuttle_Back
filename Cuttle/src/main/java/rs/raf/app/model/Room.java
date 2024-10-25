@@ -457,13 +457,13 @@ public class Room {
         //remove 2 at random and add to graveyard
         else {
             //if two cards are selected by enemy player on front end, discard them
-            if (gameAction.getHelperCardList().size() == 2) {
-                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(0), gameAction.getOntoPlayer());
-                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(1), gameAction.getOntoPlayer());
-            } else {//if player didn't select two cards, discard 2 at random
+//            if (gameAction.getHelperCardList().size() == 2) {
+//                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(0), gameAction.getOntoPlayer());
+//                discardSelectedCardFromPlayerHand(gameAction.getHelperCardList().get(1), gameAction.getOntoPlayer());
+//            } else {//if player didn't select two cards, discard 2 at random
                 discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
                 discardRandomCardFromPlayerHand(playerHands.get(gameAction.getOntoPlayer()));
-            }
+//            }
         }
 
         //send 4 to graveyard
